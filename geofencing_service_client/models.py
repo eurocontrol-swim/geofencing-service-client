@@ -37,6 +37,8 @@ __author__ = "EUROCONTROL (SWIM)"
 
 from rest_client.typing import JSONType
 
+from geofencing_service_client.utils import get_time_from_datetime_iso
+
 GeoJSONPolygonCoordinates = List[List[List[Union[float, int]]]]
 
 
@@ -94,6 +96,11 @@ class CodeVerticalReferenceType(Choice):
     AGL = "AGL"
     AMSL = "AMSL"
     WGS84 = "WGS84"
+
+
+class RequestStatus(enum.Enum):
+    OK = "OK"
+    NOK = "NOK"
 
 
 class Point(BaseModel):
@@ -165,6 +172,8 @@ class AirspaceVolume(BaseModel):
 
 class DailySchedule(BaseModel):
 
+    _default_date = "2000-01-01"
+
     def __init__(self, day: Union[str, CodeWeekDay], start_time: datetime, end_time: datetime) -> None:
         """
 
@@ -178,17 +187,20 @@ class DailySchedule(BaseModel):
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
+        start_time = f"{cls._default_date}T{object_dict['startTime']}"
+        end_time = f"{cls._default_date}T{object_dict['endTime']}"
+
         return cls(
             day=object_dict['day'],
-            start_time=datetime.fromisoformat(object_dict['startTime']),
-            end_time=datetime.fromisoformat(object_dict['endTime']),
+            start_time=datetime.fromisoformat(start_time),
+            end_time=datetime.fromisoformat(end_time),
         )
 
     def to_json(self) -> JSONType:
         return {
             'day': self.day.value,
-            'startTime': self.start_time.isoformat(),
-            'endTime': self.end_time.isoformat()
+            'startTime': get_time_from_datetime_iso(self.start_time.isoformat()),
+            'endTime': get_time_from_datetime_iso(self.end_time.isoformat())
         }
 
 
@@ -198,7 +210,7 @@ class ApplicableTimePeriod(BaseModel):
                  permanent: Union[str, CodeYesNoType],
                  start_date_time: datetime,
                  end_date_time: datetime,
-                 daily_schedule: DailySchedule):
+                 daily_schedule: List[DailySchedule]):
         """
 
         :param permanent:
@@ -217,15 +229,15 @@ class ApplicableTimePeriod(BaseModel):
             permanent=object_dict['permanent'],
             start_date_time=datetime.fromisoformat(object_dict['startDateTime']),
             end_date_time=datetime.fromisoformat(object_dict['endDateTime']),
-            daily_schedule=DailySchedule.from_json(object_dict['dailySchedule'])
+            daily_schedule=[DailySchedule.from_json(daily_schedule) for daily_schedule in object_dict['dailySchedule']]
         )
 
     def to_json(self) -> JSONType:
         return {
             'permanent': self.permanent.value,
-            'startDateTime': self.start_date_time,
-            'endDateTime': self.end_date_time,
-            'dailySchedule': self.daily_schedule.to_json()
+            'startDateTime': self.start_date_time.isoformat(),
+            'endDateTime': self.end_date_time.isoformat(),
+            'dailySchedule': [daily_schedule.to_json() for daily_schedule in self.daily_schedule]
         }
 
 
@@ -339,13 +351,13 @@ class Authority(BaseModel):
     def from_json(cls, object_dict: JSONType):
         return cls(
             requires_notification_to=NotificationRequirement.from_json(object_dict['requiresNotificationTo']),
-            requires_authorization_from=AuthorizationRequirement.from_json(object_dict['requiresAuthorisationFrom'])
+            requires_authorization_from=AuthorizationRequirement.from_json(object_dict['requiresAuthorizationFrom'])
         )
 
     def to_json(self) -> JSONType:
         return {
             'requiresNotificationTo': self.requires_notification_to.to_json(),
-            'requiresAuthorisationFrom': self.requires_authorization_from.to_json()
+            'requiresAuthorizationFrom': self.requires_authorization_from.to_json()
         }
 
 
@@ -376,14 +388,14 @@ class UASZone(BaseModel):
     def __init__(self,
                  identifier: str,
                  name: str,
-                 type: str,
+                 type: Union[str, CodeZoneType],
                  restriction: Union[str, CodeRestrictionType],
                  restriction_conditions: List[str],
                  region: int,
                  data_capture_prohibition: Union[str, CodeYesNoType],
-                 u_space_class: str,
+                 u_space_class: Union[str, CodeUSpaceClassType],
                  message: str,
-                 reason: str,
+                 reason: List[CodeZoneReasonType],
                  country: str,
                  airspace_volume: AirspaceVolume,
                  applicable_time_period: ApplicableTimePeriod,
@@ -411,12 +423,12 @@ class UASZone(BaseModel):
         """
         self.identifier = identifier
         self.name = name
-        self.type = type
-        self.restriction = restriction
+        self.type = CodeZoneType(type)
+        self.restriction = CodeRestrictionType(restriction)
         self.restriction_conditions = restriction_conditions
         self.region = region
-        self.data_capture_prohibition = data_capture_prohibition
-        self.u_space_class = u_space_class
+        self.data_capture_prohibition = CodeYesNoType(data_capture_prohibition)
+        self.u_space_class = CodeUSpaceClassType(u_space_class)
         self.message = message
         self.reason = reason
         self.country = country
@@ -431,14 +443,14 @@ class UASZone(BaseModel):
         return cls(
             identifier=object_dict['identifier'],
             name=object_dict['name'],
-            type=object_dict['type'],
-            restriction=object_dict['restriction'],
+            type=CodeZoneType(object_dict['type']),
+            restriction=CodeRestrictionType(object_dict['restriction']),
             restriction_conditions=object_dict['restrictionConditions'],
             region=object_dict['region'],
             data_capture_prohibition=object_dict['dataCaptureProhibition'],
-            u_space_class=object_dict['uSpaceClass'],
+            u_space_class=CodeUSpaceClassType(object_dict['uSpaceClass']),
             message=object_dict['message'],
-            reason=object_dict['reason'],
+            reason=[CodeZoneReasonType(reason) for reason in object_dict['reason']],
             country=object_dict['country'],
             airspace_volume=AirspaceVolume.from_json(object_dict['airspaceVolume']),
             applicable_time_period=ApplicableTimePeriod.from_json(object_dict['applicableTimePeriod']),
@@ -451,14 +463,14 @@ class UASZone(BaseModel):
         return {
             'identifier': self.identifier,
             'name': self.name,
-            'type': self.type,
-            'restriction': self.restriction,
-            'restriction_conditions': self.restriction_conditions,
+            'type': self.type.value,
+            'restriction': self.restriction.value,
+            'restrictionConditions': self.restriction_conditions,
             'region': self.region,
-            'dataCaptureProhibition': self.data_capture_prohibition,
-            'uSpaceClass': self.u_space_class,
+            'dataCaptureProhibition': self.data_capture_prohibition.value,
+            'uSpaceClass': self.u_space_class.value,
             'message': self.message,
-            'reason': self.reason,
+            'reason': [reason.value for reason in self.reason],
             'country': self.country,
             'airspaceVolume': self.airspace_volume.to_json(),
             'applicableTimePeriod': self.applicable_time_period.to_json(),
@@ -498,9 +510,9 @@ class UASZonesFilter(BaseModel):
         return cls(
             airspace_volume=AirspaceVolume.from_json(object_dict["airspaceVolume"]),
             regions=object_dict['regions'],
-            start_date_time=object_dict['startDateTime'],
-            end_date_time=object_dict['endDateTime'],
-            updated_after_date_time=object_dict.get('updatedAfterDateTime'),
+            start_date_time=datetime.fromisoformat(object_dict['startDateTime']),
+            end_date_time=datetime.fromisoformat(object_dict['endDateTime']),
+            updated_after_date_time=datetime.fromisoformat(object_dict.get('updatedAfterDateTime')),
             request_id=object_dict.get('requestID')
         )
 
@@ -508,8 +520,79 @@ class UASZonesFilter(BaseModel):
         return {
             "airspaceVolume": self.airspace_volume.to_json(),
             "regions": self.regions,
-            "startDateTime": self.start_date_time,
-            "endDateTime": self.end_date_time,
-            "updatedAfterDateTime": self.updated_after_date_time,
+            "startDateTime": self.start_date_time.isoformat(),
+            "endDateTime": self.end_date_time.isoformat(),
+            "updatedAfterDateTime": self.updated_after_date_time.isoformat(),
             "requestID": self.request_id
         }
+
+
+class GenericReply(BaseModel):
+
+    def __init__(self,
+                 request_status: Union[str, RequestStatus],
+                 request_exception_description: Optional[str] = None,
+                 request_processed_timestamp: Optional[datetime] = None):
+        """
+        Encapsulates general information about the result of the respective request process
+        :param request_status: can be OK or NOK
+        :param request_exception_description:
+        :param request_processed_timestamp:
+        """
+        self.request_status = RequestStatus(request_status)
+        self.request_exception_description = request_exception_description
+        self.request_processed_timestamp = request_processed_timestamp
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            request_status=object_dict['requestStatus'],
+            request_exception_description=object_dict['requestExceptionDescription'],
+            request_processed_timestamp=datetime.fromisoformat(object_dict['requestProcessedTimestamp'])
+        )
+
+
+class UASZoneFilterReply(BaseModel):
+
+    def __init__(self, uas_zones: List[UASZone], generic_reply: GenericReply):
+        self.uas_zones = uas_zones
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            uas_zones=[UASZone.from_json(uas_zone_object) for uas_zone_object in object_dict['UASZones']],
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )
+
+
+class UASZoneCreateReply(BaseModel):
+
+    def __init__(self, uas_zone: UASZone, generic_reply: GenericReply):
+        super().__init__()
+        self.uas_zone = uas_zone
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            uas_zone=UASZone.from_json(object_dict['UASZone']),
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )
+
+
+class SubscribeToUASZonesUpdatesReply(BaseModel):
+
+    def __init__(self, subscription_id: str, publication_location: str, generic_reply: GenericReply):
+        super().__init__()
+        self.subscription_id = subscription_id
+        self.publication_location = publication_location
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            subscription_id=object_dict['subscriptionID'],
+            publication_location=object_dict['publicationLocation'],
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )
