@@ -46,9 +46,10 @@ BASE_URL = 'geofencing-service/api/1.0/'
 def test_filter_uas_zones__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
-    request_handler.get = Mock(return_value=response)
+    request_handler.post = Mock(return_value=response)
 
     client = GeofencingServiceClient(request_handler=request_handler)
 
@@ -79,9 +80,10 @@ def test_filter_uas_zones__proper_response_is_returned():
 
 
 @pytest.mark.parametrize('error_code', [400, 401, 403, 404, 500])
-def test_filter_uas_zones__http_error_code__raises_api_error(error_code):
+def test_create_uas_zones__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
     request_handler.post = Mock(return_value=response)
@@ -118,6 +120,7 @@ def test_uas_zone_create__proper_response_is_returned():
 def test_delete_uas_zone_by_identifier__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
     request_handler.delete = Mock(return_value=response)
@@ -149,6 +152,7 @@ def test_delete_uas_zone_by_identifier():
 def test_post_subscription__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
     request_handler.post = Mock(return_value=response)
@@ -186,6 +190,7 @@ def test_post_subscription__proper_response_is_returned():
 def test_put_subscription__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
     request_handler.put = Mock(return_value=response)
@@ -222,6 +227,7 @@ def test_put_subscription__proper_response_is_returned():
 def test_delete_subscription_by_id__http_error_code__raises_api_error(error_code):
     response = Mock()
     response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
 
     request_handler = Mock()
     request_handler.delete = Mock(return_value=response)

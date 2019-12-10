@@ -32,6 +32,7 @@ import typing as t
 from rest_client import Requestor, ClientFactory
 from rest_client.typing import RequestHandler
 
+from geofencing_service_client.errors import handle_geofencing_service_error
 from geofencing_service_client.models import UASZone, UASZonesFilter, UASZoneFilterReply, UASZoneCreateReply, \
     SubscribeToUASZonesUpdatesReply, GenericReply
 
@@ -47,7 +48,6 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         :param request_handler: an instance of an object capable of handling http requests, i.e. requests.session()
         """
         Requestor.__init__(self, request_handler)
-        self._request_handler = request_handler
 
         self._url_uas_zones = self._BASE_URL + 'uas_zones/'
         self._url_uas_zones_filter = self._BASE_URL + 'uas_zones/filter/'
@@ -55,6 +55,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         self._url_subscriptions = self._BASE_URL + 'subscriptions/'
         self._url_subscription_by_id = self._BASE_URL + 'subscriptions/{subscription_id}'
 
+    @handle_geofencing_service_error
     def filter_uas_zones(self, uas_zones_filter: UASZonesFilter) -> UASZoneFilterReply:
         """
         Retrieves UASZones based on the provided filter criteria
@@ -67,6 +68,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
                                     json=uas_zones_filter.to_json(),
                                     response_class=UASZoneFilterReply)
 
+    @handle_geofencing_service_error
     def post_uas_zone(self, uas_zone: UASZone) -> UASZoneCreateReply:
         """
         Create a new UASZone
@@ -79,6 +81,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
                                     json=uas_zone.to_json(),
                                     response_class=UASZoneCreateReply)
 
+    @handle_geofencing_service_error
     def delete_uas_zone_by_identifier(self, uas_zone_identifier: int) -> GenericReply:
         """
         Delete an UASZone
@@ -90,6 +93,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
 
         return self.perform_request('DELETE', url, response_class=GenericReply)
 
+    @handle_geofencing_service_error
     def post_subscription(self, uas_zones_filter: UASZonesFilter) -> SubscribeToUASZonesUpdatesReply:
         """
         Creates a new subscription based on the provided filter criteria. The subscriber can then use the returned
@@ -104,6 +108,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
                                     json=uas_zones_filter.to_json(),
                                     response_class=SubscribeToUASZonesUpdatesReply)
 
+    @handle_geofencing_service_error
     def put_subscription(self, subscription_id: str, update_data: t.Dict[str, bool]) -> GenericReply:
         """
         It can be used to pause/resume a subscription by updating its status.
@@ -119,6 +124,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
 
         return self.perform_request('PUT', url, json=update_data, response_class=GenericReply)
 
+    @handle_geofencing_service_error
     def delete_subscription_by_id(self, subscription_id: int) -> GenericReply:
         """
         Unsubscribes the subscriber from the subscription by deleting the subscription
