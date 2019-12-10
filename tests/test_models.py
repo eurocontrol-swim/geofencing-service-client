@@ -1163,7 +1163,7 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
             }
         },
         UASZoneFilterReply(
-            uas_zones=[
+            uas_zone_list=[
                 UASZone(
                     identifier="zsdffgs",
                     message='message',

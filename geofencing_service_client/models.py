@@ -556,14 +556,14 @@ class GenericReply(BaseModel):
 
 class UASZoneFilterReply(BaseModel):
 
-    def __init__(self, uas_zones: List[UASZone], generic_reply: GenericReply):
-        self.uas_zones = uas_zones
+    def __init__(self, uas_zone_list: List[UASZone], generic_reply: GenericReply):
+        self.uas_zone_list = uas_zone_list
         self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            uas_zones=[UASZone.from_json(uas_zone_object) for uas_zone_object in object_dict['UASZoneList']],
+            uas_zone_list=[UASZone.from_json(uas_zone_object) for uas_zone_object in object_dict['UASZoneList']],
             generic_reply=GenericReply.from_json(object_dict['genericReply'])
         )
 
