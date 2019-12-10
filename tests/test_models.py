@@ -998,9 +998,58 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
             'endDateTime': '2020-02-01T00:00:00+00:00',
             'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
         }
+    ),(
+        UASZonesFilter(
+            airspace_volume=AirspaceVolume(
+                lower_limit_in_m=0,
+                lower_vertical_reference="AGL",
+                upper_limit_in_m=0,
+                upper_vertical_reference="AGL",
+                polygon=[
+                    Point(lat=50.862525, lon=4.328120),
+                    Point(lat=50.865502, lon=4.329257),
+                    Point(lat=50.865468, lon=4.323686),
+                    Point(lat=50.862525, lon=4.328120)
+                ]
+            ),
+            regions=[1],
+            request_id='request',
+            start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+            end_date_time=datetime(2020, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+        ),
+        {
+            'airspaceVolume': {
+                "lowerLimit": 0,
+                "lowerVerticalReference": "AGL",
+                "polygon": [
+                    {
+                        "LAT": "50.862525",
+                        "LON": "4.32812"
+                    },
+                    {
+                        "LAT": "50.865502",
+                        "LON": "4.329257"
+                    },
+                    {
+                        "LAT": "50.865468",
+                        "LON": "4.323686"
+                    },
+                    {
+                        "LAT": "50.862525",
+                        "LON": "4.32812"
+                    }
+                ],
+                "upperLimit": 0,
+                "upperVerticalReference": "AGL"
+            },
+            'regions': [1],
+            'requestID': 'request',
+            'startDateTime': '2020-01-01T00:00:00+00:00',
+            'endDateTime': '2020-02-01T00:00:00+00:00'
+        }
     )
 ])
-def test_uas_zones_filter__to_json(uas_zones_filter, expected_json):
+def test_uas_zones_filter__to_json__(uas_zones_filter, expected_json):
     assert expected_json == uas_zones_filter.to_json()
 
 

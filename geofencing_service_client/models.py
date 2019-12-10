@@ -515,14 +515,18 @@ class UASZonesFilter(BaseModel):
         )
 
     def to_json(self) -> Dict[str, Any]:
-        return {
+        result = {
             "airspaceVolume": self.airspace_volume.to_json(),
             "regions": self.regions,
             "startDateTime": self.start_date_time.isoformat(),
             "endDateTime": self.end_date_time.isoformat(),
-            "updatedAfterDateTime": self.updated_after_date_time.isoformat() if self.updated_after_date_time else None,
             "requestID": self.request_id
         }
+
+        if self.updated_after_date_time:
+            result["updatedAfterDateTime"] = self.updated_after_date_time.isoformat()
+
+        return result
 
 
 class GenericReply(BaseModel):
