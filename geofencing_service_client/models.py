@@ -563,7 +563,7 @@ class UASZoneFilterReply(BaseModel):
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            uas_zones=[UASZone.from_json(uas_zone_object) for uas_zone_object in object_dict['UASZones']],
+            uas_zones=[UASZone.from_json(uas_zone_object) for uas_zone_object in object_dict['UASZoneList']],
             generic_reply=GenericReply.from_json(object_dict['genericReply'])
         )
 
