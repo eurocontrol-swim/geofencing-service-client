@@ -29,7 +29,7 @@ Details on EUROCONTROL: http://www.eurocontrol.int
 """
 import enum
 from datetime import datetime
-from typing import List, Union, Dict, Optional, Any, Tuple
+from typing import List, Union, Dict, Optional, Any
 
 from rest_client import BaseModel
 
@@ -41,23 +41,13 @@ from geofencing_service_client.utils import get_time_from_datetime_iso
 
 GeoJSONPolygonCoordinates = List[List[List[Union[float, int]]]]
 
-AIRSPACE_VOLUME_UPPER_LIMIT_IN_M = 100000
-AIRSPACE_VOLUME_LOWER_LIMIT_IN_M = 0
 
-
-class Choice(enum.Enum):
-
-    @classmethod
-    def choices(cls) -> Tuple[Any]:
-        return tuple(v.value for v in cls.__members__.values())
-
-
-class CodeYesNoType(Choice):
+class CodeYesNoType(enum.Enum):
     YES = "YES"
     NO = "NO"
 
 
-class CodeWeekDay(Choice):
+class CodeWeekDay(enum.Enum):
     MON = "MON"
     TUE = "TUE"
     WED = "WED"
@@ -67,24 +57,24 @@ class CodeWeekDay(Choice):
     SUN = "SUN"
 
 
-class CodeZoneType(Choice):
+class CodeZoneType(enum.Enum):
     COMMON = "COMMON"
     CUSTOMIZED = "CUSTOMIZED"
 
 
-class CodeRestrictionType(Choice):
+class CodeRestrictionType(enum.Enum):
     PROHIBITED = "PROHIBITED"
     REQ_AUTHORISATION = "REQ_AUTHORISATION"
     CONDITIONAL = "CONDITIONAL"
     NO_RESTRICTION = "NO_RESTRICTION"
 
 
-class CodeUSpaceClassType(Choice):
+class CodeUSpaceClassType(enum.Enum):
     EUROCONTROL = "EUROCONTROL"
     CORUS = "CORUS"
 
 
-class CodeZoneReasonType(Choice):
+class CodeZoneReasonType(enum.Enum):
     AIR_TRAFFIC = "AIR_TRAFFIC"
     SENSITIVE = "SENSITIVE"
     PRIVACY = "PRIVACY"
@@ -95,7 +85,7 @@ class CodeZoneReasonType(Choice):
     OTHER = "OTHER"
 
 
-class CodeVerticalReferenceType(Choice):
+class CodeVerticalReferenceType(enum.Enum):
     AGL = "AGL"
     AMSL = "AMSL"
     WGS84 = "WGS84"
@@ -135,10 +125,10 @@ class AirspaceVolume(BaseModel):
 
     def __init__(self,
                  polygon: List[Point],
-                 upper_limit_in_m: int = AIRSPACE_VOLUME_UPPER_LIMIT_IN_M,
-                 lower_limit_in_m: int = AIRSPACE_VOLUME_LOWER_LIMIT_IN_M,
-                 upper_vertical_reference: Optional[str] = None,
-                 lower_vertical_reference: Optional[str] = None) -> None:
+                 upper_limit_in_m: int,
+                 lower_limit_in_m: int,
+                 upper_vertical_reference: Union[CodeVerticalReferenceType, str],
+                 lower_vertical_reference: Union[CodeVerticalReferenceType, str]) -> None:
         """
 
         :param polygon:
@@ -150,8 +140,8 @@ class AirspaceVolume(BaseModel):
         self.polygon = polygon
         self.upper_limit_in_m = upper_limit_in_m
         self.lower_limit_in_m = lower_limit_in_m
-        self.upper_vertical_reference = upper_vertical_reference or ""
-        self.lower_vertical_reference = lower_vertical_reference or ""
+        self.upper_vertical_reference = CodeVerticalReferenceType(upper_vertical_reference)
+        self.lower_vertical_reference = CodeVerticalReferenceType(lower_vertical_reference)
 
     @classmethod
     def from_json(cls, object_dict):
@@ -168,8 +158,8 @@ class AirspaceVolume(BaseModel):
             "polygon": [point.to_json() for point in self.polygon],
             "upperLimit": self.upper_limit_in_m,
             "lowerLimit": self.lower_limit_in_m,
-            "upperVerticalReference": self.upper_vertical_reference,
-            "lowerVerticalReference": self.lower_vertical_reference
+            "upperVerticalReference": self.upper_vertical_reference.value,
+            "lowerVerticalReference": self.lower_vertical_reference.value
         }
 
 
