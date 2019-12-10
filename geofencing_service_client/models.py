@@ -41,6 +41,9 @@ from geofencing_service_client.utils import get_time_from_datetime_iso
 
 GeoJSONPolygonCoordinates = List[List[List[Union[float, int]]]]
 
+AIRSPACE_VOLUME_UPPER_LIMIT_IN_M = 100000
+AIRSPACE_VOLUME_LOWER_LIMIT_IN_M = 0
+
 
 class Choice(enum.Enum):
 
@@ -132,8 +135,8 @@ class AirspaceVolume(BaseModel):
 
     def __init__(self,
                  polygon: List[Point],
-                 upper_limit_in_m: Optional[int] = None,
-                 lower_limit_in_m: Optional[int] = None,
+                 upper_limit_in_m: int = AIRSPACE_VOLUME_UPPER_LIMIT_IN_M,
+                 lower_limit_in_m: int = AIRSPACE_VOLUME_LOWER_LIMIT_IN_M,
                  upper_vertical_reference: Optional[str] = None,
                  lower_vertical_reference: Optional[str] = None) -> None:
         """

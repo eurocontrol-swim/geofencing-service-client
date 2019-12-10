@@ -33,7 +33,7 @@ __author__ = 'EUROCONTROL (SWIM)'
 
 setup(
     name='geofencing-service-client',
-    version='0.0.2',
+    version='0.0.3',
     description='Geofencing Service Client',
     author='EUROCONTROL (SWIM)',
     author_email='',
