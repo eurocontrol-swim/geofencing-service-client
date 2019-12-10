@@ -507,12 +507,17 @@ class UASZonesFilter(BaseModel):
 
     @classmethod
     def from_json(cls, object_dict):
+        updated_after_date_time = object_dict.get('updatedAfterDateTime')
+
+        if updated_after_date_time is not None:
+            updated_after_date_time = datetime.fromisoformat(updated_after_date_time)
+
         return cls(
             airspace_volume=AirspaceVolume.from_json(object_dict["airspaceVolume"]),
             regions=object_dict['regions'],
             start_date_time=datetime.fromisoformat(object_dict['startDateTime']),
             end_date_time=datetime.fromisoformat(object_dict['endDateTime']),
-            updated_after_date_time=datetime.fromisoformat(object_dict.get('updatedAfterDateTime')),
+            updated_after_date_time=updated_after_date_time,
             request_id=object_dict.get('requestID')
         )
 
@@ -522,7 +527,7 @@ class UASZonesFilter(BaseModel):
             "regions": self.regions,
             "startDateTime": self.start_date_time.isoformat(),
             "endDateTime": self.end_date_time.isoformat(),
-            "updatedAfterDateTime": self.updated_after_date_time.isoformat(),
+            "updatedAfterDateTime": self.updated_after_date_time.isoformat() if self.updated_after_date_time else None,
             "requestID": self.request_id
         }
 
