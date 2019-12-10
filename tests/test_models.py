@@ -1056,9 +1056,9 @@ def test_uas_zones_filter__to_json__(uas_zones_filter, expected_json):
 @pytest.mark.parametrize('generic_reply_json, expected_object', [
     (
         {
-            'requestStatus': 'OK',
-            'requestExceptionDescription': 'everything ok',
-            'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
         },
         GenericReply(
             request_status=RequestStatus.OK,
@@ -1074,7 +1074,7 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
 @pytest.mark.parametrize('uas_zones_filter_reply_json, expected_object', [
     (
         {
-            'UASZones': [
+            'UASZoneList': [
                 {
                     'airspaceVolume': {
                         "lowerLimit": 0,
@@ -1157,9 +1157,9 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
                 }
             ],
             'genericReply': {
-                'requestStatus': 'OK',
-                'requestExceptionDescription': 'everything ok',
-                'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
             }
         },
         UASZoneFilterReply(
@@ -1332,9 +1332,9 @@ def test_uas_zones_filter_reply__from_json(uas_zones_filter_reply_json, expected
                 'uSpaceClass': 'EUROCONTROL',
             },
             'genericReply': {
-                'requestStatus': 'OK',
-                'requestExceptionDescription': 'everything ok',
-                'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
             }
         },
         UASZoneCreateReply(
@@ -1427,9 +1427,9 @@ def test_create_uas_zone_reply__from_json(create_uas_zone_reply_json, expected_o
             'subscriptionID': '123456',
             'publicationLocation': 'location',
             'genericReply': {
-                'requestStatus': 'OK',
-                'requestExceptionDescription': 'everything ok',
-                'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
             }
         },
         SubscribeToUASZonesUpdatesReply(

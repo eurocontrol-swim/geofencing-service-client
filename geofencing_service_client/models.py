@@ -548,9 +548,9 @@ class GenericReply(BaseModel):
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            request_status=object_dict['requestStatus'],
-            request_exception_description=object_dict['requestExceptionDescription'],
-            request_processed_timestamp=datetime.fromisoformat(object_dict['requestProcessedTimestamp'])
+            request_status=object_dict['RequestStatus'],
+            request_exception_description=object_dict['RequestExceptionDescription'],
+            request_processed_timestamp=datetime.fromisoformat(object_dict['RequestProcessedTimestamp'])
         )
 
 

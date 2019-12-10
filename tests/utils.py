@@ -163,9 +163,9 @@ def make_uas_zone() -> Tuple[Dict[str, Any], UASZone]:
 
 def test_make_generic_reply() -> Tuple[Dict[str, Any], GenericReply]:
     generic_reply_dict = {
-        'requestStatus': 'OK',
-        'requestExceptionDescription': 'everything ok',
-        'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+        'RequestStatus': 'OK',
+        'RequestExceptionDescription': 'everything ok',
+        'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
     }
 
     generic_reply = GenericReply.from_json(generic_reply_dict)
@@ -175,7 +175,7 @@ def test_make_generic_reply() -> Tuple[Dict[str, Any], GenericReply]:
 
 def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
     uas_zones_filter_reply_dict = {
-            'UASZones': [
+            'UASZoneList': [
                 {
                     'airspaceVolume': {
                         "lowerLimit": 0,
@@ -258,9 +258,9 @@ def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
                 }
             ],
             'genericReply': {
-                'requestStatus': 'OK',
-                'requestExceptionDescription': 'everything ok',
-                'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
             }
         }
 
@@ -352,9 +352,9 @@ def make_uas_zone_create_reply():
             'uSpaceClass': 'EUROCONTROL',
         },
         'genericReply': {
-            'requestStatus': 'OK',
-            'requestExceptionDescription': 'everything ok',
-            'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
         }
     }
 
@@ -368,9 +368,9 @@ def make_subscribe_to_uas_zones_updates_reply():
         'subscriptionID': '123456',
         'publicationLocation': 'location',
         'genericReply': {
-            'requestStatus': 'OK',
-            'requestExceptionDescription': 'everything ok',
-            'requestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
         }
     }
     subscribe_to_uas_zones_updates_reply = SubscribeToUASZonesUpdatesReply.from_json(
