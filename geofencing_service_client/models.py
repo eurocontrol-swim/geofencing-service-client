@@ -502,7 +502,7 @@ class UASZonesFilter(BaseModel):
     def from_json(cls, object_dict):
         updated_after_date_time = object_dict.get('updatedAfterDateTime')
 
-        if updated_after_date_time is not None:
+        if updated_after_date_time:
             updated_after_date_time = datetime.fromisoformat(updated_after_date_time)
 
         return cls(
