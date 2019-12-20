@@ -54,6 +54,8 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         self._url_uas_zones_by_identifier = self._BASE_URL + 'uas_zones/{uas_zone_identifier}'
         self._url_subscriptions = self._BASE_URL + 'subscriptions/'
         self._url_subscription_by_id = self._BASE_URL + 'subscriptions/{subscription_id}'
+        self._url_ping_credentials = self._BASE_URL + 'ping-credentials'
+
 
     @handle_geofencing_service_error
     def filter_uas_zones(self, uas_zones_filter: UASZonesFilter) -> UASZoneFilterReply:
@@ -135,3 +137,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         url = self._url_subscription_by_id.format(subscription_id=subscription_id)
 
         return self.perform_request('DELETE', url, response_class=GenericReply)
+
+    def ping_credentials(self):
+
+        return self.perform_request('GET', self._url_ping_credentials)
