@@ -31,6 +31,7 @@ import enum
 from datetime import datetime
 from typing import List, Union, Dict, Optional, Any
 
+import dateutil.parser
 from rest_client import BaseModel
 
 __author__ = "EUROCONTROL (SWIM)"
@@ -185,8 +186,8 @@ class DailySchedule(BaseModel):
 
         return cls(
             day=object_dict['day'],
-            start_time=datetime.fromisoformat(start_time),
-            end_time=datetime.fromisoformat(end_time),
+            start_time=dateutil.parser.parse(start_time),
+            end_time=dateutil.parser.parse(end_time),
         )
 
     def to_json(self) -> JSONType:
@@ -220,8 +221,8 @@ class ApplicableTimePeriod(BaseModel):
     def from_json(cls, object_dict: JSONType):
         return cls(
             permanent=object_dict['permanent'],
-            start_date_time=datetime.fromisoformat(object_dict['startDateTime']),
-            end_date_time=datetime.fromisoformat(object_dict['endDateTime']),
+            start_date_time=dateutil.parser.parse(object_dict['startDateTime']),
+            end_date_time=dateutil.parser.parse(object_dict['endDateTime']),
             daily_schedule=[DailySchedule.from_json(daily_schedule) for daily_schedule in object_dict['dailySchedule']]
         )
 
@@ -364,8 +365,8 @@ class DataSource(BaseModel):
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            creation_date_time=datetime.fromisoformat(object_dict['creationDateTime']),
-            update_date_time=datetime.fromisoformat(object_dict['updateDateTime']),
+            creation_date_time=dateutil.parser.parse(object_dict['creationDateTime']),
+            update_date_time=dateutil.parser.parse(object_dict['updateDateTime']),
             author=object_dict['author']
         )
 
@@ -503,13 +504,13 @@ class UASZonesFilter(BaseModel):
         updated_after_date_time = object_dict.get('updatedAfterDateTime')
 
         if updated_after_date_time:
-            updated_after_date_time = datetime.fromisoformat(updated_after_date_time)
+            updated_after_date_time = dateutil.parser.parse(updated_after_date_time)
 
         return cls(
             airspace_volume=AirspaceVolume.from_json(object_dict["airspaceVolume"]),
             regions=object_dict['regions'],
-            start_date_time=datetime.fromisoformat(object_dict['startDateTime']),
-            end_date_time=datetime.fromisoformat(object_dict['endDateTime']),
+            start_date_time=dateutil.parser.parse(object_dict['startDateTime']),
+            end_date_time=dateutil.parser.parse(object_dict['endDateTime']),
             updated_after_date_time=updated_after_date_time,
             request_id=object_dict.get('requestID')
         )
@@ -550,7 +551,7 @@ class GenericReply(BaseModel):
         return cls(
             request_status=object_dict['RequestStatus'],
             request_exception_description=object_dict['RequestExceptionDescription'],
-            request_processed_timestamp=datetime.fromisoformat(object_dict['RequestProcessedTimestamp'])
+            request_processed_timestamp=dateutil.parser.parse(object_dict['RequestProcessedTimestamp'])
         )
 
 
