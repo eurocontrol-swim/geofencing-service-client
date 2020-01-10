@@ -34,7 +34,7 @@ from rest_client.typing import RequestHandler
 
 from geofencing_service_client.errors import handle_geofencing_service_error
 from geofencing_service_client.models import UASZone, UASZonesFilter, UASZoneFilterReply, UASZoneCreateReply, \
-    SubscribeToUASZonesUpdatesReply, GenericReply
+    SubscribeToUASZonesUpdatesReply, GenericReply, UASZoneSubscriptionReply
 
 __author__ = "EUROCONTROL (SWIM)"
 
@@ -55,7 +55,6 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         self._url_subscriptions = self._BASE_URL + 'subscriptions/'
         self._url_subscription_by_id = self._BASE_URL + 'subscriptions/{subscription_id}'
         self._url_ping_credentials = self._BASE_URL + 'ping-credentials'
-
 
     @handle_geofencing_service_error
     def filter_uas_zones(self, uas_zones_filter: UASZonesFilter) -> UASZoneFilterReply:
@@ -111,6 +110,18 @@ class GeofencingServiceClient(Requestor, ClientFactory):
                                     response_class=SubscribeToUASZonesUpdatesReply)
 
     @handle_geofencing_service_error
+    def get_subscription_by_id(self, subscription_id: str) -> UASZoneSubscriptionReply:
+        """
+        Retrieves subscription data (id and queue)
+
+        :param subscription_id:
+        :return:
+        """
+        url = self._url_subscription_by_id.format(subscription_id=subscription_id)
+
+        return self.perform_request('GET', url, response_class=UASZoneSubscriptionReply)
+
+    @handle_geofencing_service_error
     def put_subscription(self, subscription_id: str, update_data: t.Dict[str, bool]) -> GenericReply:
         """
         It can be used to pause/resume a subscription by updating its status.
@@ -127,7 +138,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         return self.perform_request('PUT', url, json=update_data, response_class=GenericReply)
 
     @handle_geofencing_service_error
-    def delete_subscription_by_id(self, subscription_id: int) -> GenericReply:
+    def delete_subscription_by_id(self, subscription_id: str) -> GenericReply:
         """
         Unsubscribes the subscriber from the subscription by deleting the subscription
 

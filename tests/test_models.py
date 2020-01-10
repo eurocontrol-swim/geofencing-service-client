@@ -37,7 +37,7 @@ import pytest
 from geofencing_service_client.models import Point, AirspaceVolume, DailySchedule, CodeWeekDay, ApplicableTimePeriod, \
     CodeYesNoType, AuthorityEntity, NotificationRequirement, AuthorizationRequirement, Authority, DataSource, UASZone, \
     CodeRestrictionType, CodeUSpaceClassType, CodeZoneType, UASZonesFilter, GenericReply, RequestStatus, \
-    UASZoneFilterReply, UASZoneCreateReply, SubscribeToUASZonesUpdatesReply
+    UASZoneFilterReply, UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReply
 
 
 @pytest.mark.parametrize('point_json, expected_object', [
@@ -1445,3 +1445,31 @@ def test_create_uas_zone_reply__from_json(create_uas_zone_reply_json, expected_o
 ])
 def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_updates_reply_json, expected_object):
     assert expected_object == SubscribeToUASZonesUpdatesReply.from_json(subscribe_to_uas_zones_updates_reply_json)
+
+
+@pytest.mark.parametrize('uas_zone_subscription_reply_json, expected_object', [
+    (
+        {
+            'subscriptionID': '123456',
+            'publicationLocation': 'location',
+            'active': True,
+            'genericReply': {
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+            }
+        },
+        UASZoneSubscriptionReply(
+            subscription_id='123456',
+            publication_location='location',
+            active=True,
+            generic_reply=GenericReply(
+                request_status=RequestStatus.OK,
+                request_exception_description='everything ok',
+                request_processed_timestamp=datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+            )
+        )
+    )
+])
+def test_uas_zone_subscription_reply__from_json(uas_zone_subscription_reply_json, expected_object):
+    assert expected_object == UASZoneSubscriptionReply.from_json(uas_zone_subscription_reply_json)

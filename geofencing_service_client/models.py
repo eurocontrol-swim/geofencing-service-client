@@ -599,3 +599,22 @@ class SubscribeToUASZonesUpdatesReply(BaseModel):
             publication_location=object_dict['publicationLocation'],
             generic_reply=GenericReply.from_json(object_dict['genericReply'])
         )
+
+
+class UASZoneSubscriptionReply(BaseModel):
+
+    def __init__(self, subscription_id: str, publication_location: str, active: bool, generic_reply: GenericReply):
+        super().__init__()
+        self.subscription_id = subscription_id
+        self.publication_location = publication_location
+        self.active = active
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            subscription_id=object_dict['subscriptionID'],
+            publication_location=object_dict['publicationLocation'],
+            active=object_dict['active'],
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )

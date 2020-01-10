@@ -33,7 +33,7 @@ __author__ = "EUROCONTROL (SWIM)"
 from typing import Tuple, Dict, Any
 
 from geofencing_service_client.models import UASZonesFilter, UASZone, GenericReply, UASZoneFilterReply, \
-    UASZoneCreateReply, SubscribeToUASZonesUpdatesReply
+    UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReply
 
 
 def make_uas_zones_filter() -> Tuple[Dict[str, Any], UASZonesFilter]:
@@ -377,3 +377,19 @@ def make_subscribe_to_uas_zones_updates_reply():
         subscribe_to_uas_zones_updates_reply_dict)
 
     return subscribe_to_uas_zones_updates_reply_dict, subscribe_to_uas_zones_updates_reply
+
+
+def make_uas_zone_subscription_reply():
+    uas_zone_subscription_reply_dict = {
+        'subscriptionID': '123456',
+        'publicationLocation': 'location',
+        'active': True,
+        'genericReply': {
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+        }
+    }
+    uas_zone_subscription_reply = UASZoneSubscriptionReply.from_json(uas_zone_subscription_reply_dict)
+
+    return uas_zone_subscription_reply_dict, uas_zone_subscription_reply
