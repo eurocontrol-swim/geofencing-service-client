@@ -37,7 +37,8 @@ import pytest
 from geofencing_service_client.models import Point, AirspaceVolume, DailySchedule, CodeWeekDay, ApplicableTimePeriod, \
     CodeYesNoType, AuthorityEntity, NotificationRequirement, AuthorizationRequirement, Authority, DataSource, UASZone, \
     CodeRestrictionType, CodeUSpaceClassType, CodeZoneType, UASZonesFilter, GenericReply, RequestStatus, \
-    UASZoneFilterReply, UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReply
+    UASZoneFilterReply, UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReplyObject, \
+    UASZoneSubscriptionReply, UASZoneSubscriptionsReply
 
 
 @pytest.mark.parametrize('point_json, expected_object', [
@@ -1447,12 +1448,181 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
     assert expected_object == SubscribeToUASZonesUpdatesReply.from_json(subscribe_to_uas_zones_updates_reply_json)
 
 
-@pytest.mark.parametrize('uas_zone_subscription_reply_json, expected_object', [
+@pytest.mark.parametrize('uas_zone_subscription_reply_object_json, expected_object', [
     (
         {
             'subscriptionID': '123456',
             'publicationLocation': 'location',
             'active': True,
+            'UASZonesFilter': {
+                'airspaceVolume': {
+                    "lowerLimit": 0,
+                    "lowerVerticalReference": "AGL",
+                    "polygon": [
+                        {
+                            "LAT": "50.862525",
+                            "LON": "4.328120"
+                        },
+                        {
+                            "LAT": "50.865502",
+                            "LON": "4.329257"
+                        },
+                        {
+                            "LAT": "50.865468",
+                            "LON": "4.323686"
+                        },
+                        {
+                            "LAT": "50.862525",
+                            "LON": "4.328120"
+                        }
+                    ],
+                    "upperLimit": 0,
+                    "upperVerticalReference": "AGL"
+                },
+                'regions': [1],
+                'requestID': 'request',
+                'startDateTime': '2020-01-01T00:00:00+00:00',
+                'endDateTime': '2020-02-01T00:00:00+00:00',
+                'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
+            }
+        },
+        UASZoneSubscriptionReplyObject(
+            subscription_id='123456',
+            publication_location='location',
+            active=True,
+            uas_zones_filter=UASZonesFilter(
+                airspace_volume=AirspaceVolume(
+                    lower_limit_in_m=0,
+                    lower_vertical_reference="AGL",
+                    upper_limit_in_m=0,
+                    upper_vertical_reference="AGL",
+                    polygon=[
+                        Point(lat=50.862525, lon=4.328120),
+                        Point(lat=50.865502, lon=4.329257),
+                        Point(lat=50.865468, lon=4.323686),
+                        Point(lat=50.862525, lon=4.328120)
+                    ]
+                ),
+                regions=[1],
+                request_id='request',
+                start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                end_date_time=datetime(2020, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+                updated_after_date_time=datetime(2020, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
+            )
+        )
+    )
+])
+def test_uas_zone_subscription_reply_object__from_json(uas_zone_subscription_reply_object_json, expected_object):
+    assert expected_object == UASZoneSubscriptionReplyObject.from_json(uas_zone_subscription_reply_object_json)
+
+
+@pytest.mark.parametrize('uas_zone_subscription_reply_object, expected_dict', [
+    (
+        UASZoneSubscriptionReplyObject(
+            subscription_id='123456',
+            publication_location='location',
+            active=True,
+            uas_zones_filter=UASZonesFilter(
+                airspace_volume=AirspaceVolume(
+                    lower_limit_in_m=0,
+                    lower_vertical_reference="AGL",
+                    upper_limit_in_m=0,
+                    upper_vertical_reference="AGL",
+                    polygon=[
+                        Point(lat=50.862525, lon=4.328120),
+                        Point(lat=50.865502, lon=4.329257),
+                        Point(lat=50.865468, lon=4.323686),
+                        Point(lat=50.862525, lon=4.328120)
+                    ]
+                ),
+                regions=[1],
+                request_id='request',
+                start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                end_date_time=datetime(2020, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+                updated_after_date_time=datetime(2020, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
+            )
+        ),
+        {
+            'subscriptionID': '123456',
+            'publicationLocation': 'location',
+            'active': True,
+            'UASZonesFilter': {
+                'airspaceVolume': {
+                    "lowerLimit": 0,
+                    "lowerVerticalReference": "AGL",
+                    "polygon": [
+                        {
+                            "LAT": "50.862525",
+                            "LON": "4.32812"
+                        },
+                        {
+                            "LAT": "50.865502",
+                            "LON": "4.329257"
+                        },
+                        {
+                            "LAT": "50.865468",
+                            "LON": "4.323686"
+                        },
+                        {
+                            "LAT": "50.862525",
+                            "LON": "4.32812"
+                        }
+                    ],
+                    "upperLimit": 0,
+                    "upperVerticalReference": "AGL"
+                },
+                'regions': [1],
+                'requestID': 'request',
+                'startDateTime': '2020-01-01T00:00:00+00:00',
+                'endDateTime': '2020-02-01T00:00:00+00:00',
+                'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
+            }
+        }
+    )
+])
+def test_uas_zone_subscription_reply_object__to_json(uas_zone_subscription_reply_object, expected_dict):
+    assert expected_dict == uas_zone_subscription_reply_object.to_json()
+
+
+@pytest.mark.parametrize('uas_zone_subscription_reply_json, expected_object', [
+    (
+        {
+            'UASZoneSubscription': {
+                'subscriptionID': '123456',
+                'publicationLocation': 'location',
+                'active': True,
+                'UASZonesFilter': {
+                    'airspaceVolume': {
+                        "lowerLimit": 0,
+                        "lowerVerticalReference": "AGL",
+                        "polygon": [
+                            {
+                                "LAT": "50.862525",
+                                "LON": "4.328120"
+                            },
+                            {
+                                "LAT": "50.865502",
+                                "LON": "4.329257"
+                            },
+                            {
+                                "LAT": "50.865468",
+                                "LON": "4.323686"
+                            },
+                            {
+                                "LAT": "50.862525",
+                                "LON": "4.328120"
+                            }
+                        ],
+                        "upperLimit": 0,
+                        "upperVerticalReference": "AGL"
+                    },
+                    'regions': [1],
+                    'requestID': 'request',
+                    'startDateTime': '2020-01-01T00:00:00+00:00',
+                    'endDateTime': '2020-02-01T00:00:00+00:00',
+                    'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
+                }
+            },
             'genericReply': {
                 'RequestStatus': 'OK',
                 'RequestExceptionDescription': 'everything ok',
@@ -1460,9 +1630,30 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
             }
         },
         UASZoneSubscriptionReply(
-            subscription_id='123456',
-            publication_location='location',
-            active=True,
+            uas_zone_subscription=UASZoneSubscriptionReplyObject(
+                subscription_id='123456',
+                publication_location='location',
+                active=True,
+                uas_zones_filter=UASZonesFilter(
+                    airspace_volume=AirspaceVolume(
+                        lower_limit_in_m=0,
+                        lower_vertical_reference="AGL",
+                        upper_limit_in_m=0,
+                        upper_vertical_reference="AGL",
+                        polygon=[
+                            Point(lat=50.862525, lon=4.328120),
+                            Point(lat=50.865502, lon=4.329257),
+                            Point(lat=50.865468, lon=4.323686),
+                            Point(lat=50.862525, lon=4.328120)
+                        ]
+                    ),
+                    regions=[1],
+                    request_id='request',
+                    start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                    end_date_time=datetime(2020, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+                    updated_after_date_time=datetime(2020, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
+                )
+            ),
             generic_reply=GenericReply(
                 request_status=RequestStatus.OK,
                 request_exception_description='everything ok',
@@ -1473,3 +1664,85 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
 ])
 def test_uas_zone_subscription_reply__from_json(uas_zone_subscription_reply_json, expected_object):
     assert expected_object == UASZoneSubscriptionReply.from_json(uas_zone_subscription_reply_json)
+
+
+@pytest.mark.parametrize('uas_zone_subscriptions_reply_json, expected_object', [
+    (
+        {
+            'UASZoneSubscriptions': [{
+                'subscriptionID': '123456',
+                'publicationLocation': 'location',
+                'active': True,
+                'UASZonesFilter': {
+                    'airspaceVolume': {
+                        "lowerLimit": 0,
+                        "lowerVerticalReference": "AGL",
+                        "polygon": [
+                            {
+                                "LAT": "50.862525",
+                                "LON": "4.328120"
+                            },
+                            {
+                                "LAT": "50.865502",
+                                "LON": "4.329257"
+                            },
+                            {
+                                "LAT": "50.865468",
+                                "LON": "4.323686"
+                            },
+                            {
+                                "LAT": "50.862525",
+                                "LON": "4.328120"
+                            }
+                        ],
+                        "upperLimit": 0,
+                        "upperVerticalReference": "AGL"
+                    },
+                    'regions': [1],
+                    'requestID': 'request',
+                    'startDateTime': '2020-01-01T00:00:00+00:00',
+                    'endDateTime': '2020-02-01T00:00:00+00:00',
+                    'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
+                }
+            }],
+            'genericReply': {
+                'RequestStatus': 'OK',
+                'RequestExceptionDescription': 'everything ok',
+                'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+            }
+        },
+        UASZoneSubscriptionsReply(
+            uas_zone_subscriptions=[UASZoneSubscriptionReplyObject(
+                subscription_id='123456',
+                publication_location='location',
+                active=True,
+                uas_zones_filter=UASZonesFilter(
+                    airspace_volume=AirspaceVolume(
+                        lower_limit_in_m=0,
+                        lower_vertical_reference="AGL",
+                        upper_limit_in_m=0,
+                        upper_vertical_reference="AGL",
+                        polygon=[
+                            Point(lat=50.862525, lon=4.328120),
+                            Point(lat=50.865502, lon=4.329257),
+                            Point(lat=50.865468, lon=4.323686),
+                            Point(lat=50.862525, lon=4.328120)
+                        ]
+                    ),
+                    regions=[1],
+                    request_id='request',
+                    start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                    end_date_time=datetime(2020, 2, 1, 0, 0, 0, tzinfo=timezone.utc),
+                    updated_after_date_time=datetime(2020, 1, 15, 0, 0, 0, tzinfo=timezone.utc)
+                )
+            )],
+            generic_reply=GenericReply(
+                request_status=RequestStatus.OK,
+                request_exception_description='everything ok',
+                request_processed_timestamp=datetime(2019, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+            )
+        )
+    )
+])
+def test_uas_zone_subscriptions_reply__from_json(uas_zone_subscriptions_reply_json, expected_object):
+    assert expected_object == UASZoneSubscriptionsReply.from_json(uas_zone_subscriptions_reply_json)

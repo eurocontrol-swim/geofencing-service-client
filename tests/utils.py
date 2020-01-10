@@ -33,7 +33,8 @@ __author__ = "EUROCONTROL (SWIM)"
 from typing import Tuple, Dict, Any
 
 from geofencing_service_client.models import UASZonesFilter, UASZone, GenericReply, UASZoneFilterReply, \
-    UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReply
+    UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReplyObject, UASZoneSubscriptionReply, \
+    UASZoneSubscriptionsReply
 
 
 def make_uas_zones_filter() -> Tuple[Dict[str, Any], UASZonesFilter]:
@@ -379,17 +380,50 @@ def make_subscribe_to_uas_zones_updates_reply():
     return subscribe_to_uas_zones_updates_reply_dict, subscribe_to_uas_zones_updates_reply
 
 
-def make_uas_zone_subscription_reply():
-    uas_zone_subscription_reply_dict = {
+def make_uas_zone_subscription_reply_object():
+    uas_zones_filter_dict, _ = make_uas_zones_filter()
+
+    uas_zone_subscription_reply_object_dict = {
         'subscriptionID': '123456',
         'publicationLocation': 'location',
         'active': True,
+        'UASZonesFilter': uas_zones_filter_dict
+    }
+    uas_zone_subscription_object_reply = UASZoneSubscriptionReplyObject.from_json(
+        uas_zone_subscription_reply_object_dict)
+
+    return uas_zone_subscription_reply_object_dict, uas_zone_subscription_object_reply
+
+
+def make_uas_zone_subscription_reply():
+    uas_zone_subscription_reply_object_dict, _ = make_uas_zone_subscription_reply_object()
+
+    uas_zone_subscription_reply_dict = {
+        'UASZoneSubscription': uas_zone_subscription_reply_object_dict,
         'genericReply': {
             'RequestStatus': 'OK',
             'RequestExceptionDescription': 'everything ok',
             'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
         }
     }
+
     uas_zone_subscription_reply = UASZoneSubscriptionReply.from_json(uas_zone_subscription_reply_dict)
 
     return uas_zone_subscription_reply_dict, uas_zone_subscription_reply
+
+
+def make_uas_zone_subscriptions_reply():
+    uas_zone_subscription_reply_object_dict, _ = make_uas_zone_subscription_reply_object()
+
+    uas_zone_subscriptions_reply_dict = {
+        'UASZoneSubscriptions': [uas_zone_subscription_reply_object_dict],
+        'genericReply': {
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+        }
+    }
+
+    uas_zone_subscriptions_reply = UASZoneSubscriptionsReply.from_json(uas_zone_subscriptions_reply_dict)
+
+    return uas_zone_subscriptions_reply_dict, uas_zone_subscriptions_reply

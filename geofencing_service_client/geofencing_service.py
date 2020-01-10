@@ -34,7 +34,7 @@ from rest_client.typing import RequestHandler
 
 from geofencing_service_client.errors import handle_geofencing_service_error
 from geofencing_service_client.models import UASZone, UASZonesFilter, UASZoneFilterReply, UASZoneCreateReply, \
-    SubscribeToUASZonesUpdatesReply, GenericReply, UASZoneSubscriptionReply
+    SubscribeToUASZonesUpdatesReply, GenericReply, UASZoneSubscriptionReply, UASZoneSubscriptionsReply
 
 __author__ = "EUROCONTROL (SWIM)"
 
@@ -108,6 +108,16 @@ class GeofencingServiceClient(Requestor, ClientFactory):
                                     self._url_subscriptions,
                                     json=uas_zones_filter.to_json(),
                                     response_class=SubscribeToUASZonesUpdatesReply)
+
+    @handle_geofencing_service_error
+    def get_subscriptions(self) -> UASZoneSubscriptionsReply:
+        """
+        Retrieves subscription data (id and queue)
+
+        :param subscription_id:
+        :return:
+        """
+        return self.perform_request('GET', self._url_subscriptions, response_class=UASZoneSubscriptionsReply)
 
     @handle_geofencing_service_error
     def get_subscription_by_id(self, subscription_id: str) -> UASZoneSubscriptionReply:

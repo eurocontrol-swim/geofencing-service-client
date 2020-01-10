@@ -37,7 +37,8 @@ from rest_client.errors import APIError
 
 from geofencing_service_client.geofencing_service import GeofencingServiceClient
 from tests.utils import make_uas_zones_filter_reply, make_uas_zones_filter, make_uas_zone, make_uas_zone_create_reply, \
-    make_subscribe_to_uas_zones_updates_reply, test_make_generic_reply, make_uas_zone_subscription_reply
+    make_subscribe_to_uas_zones_updates_reply, test_make_generic_reply, make_uas_zone_subscription_reply_object, \
+    make_uas_zone_subscription_reply, make_uas_zone_subscriptions_reply
 
 BASE_URL = 'geofencing-service/api/1.0/'
 
@@ -276,7 +277,6 @@ def test_get_subscription_by_id__http_error_code__raises_api_error(error_code):
 
 
 def test_get_subscription_by_id__proper_response_is_returned():
-    _, uas_zones_filter = make_uas_zones_filter()
     uas_zone_subscription_reply_dict, expected_uas_zone_subscription_reply = make_uas_zone_subscription_reply()
 
     response = Mock()
@@ -296,3 +296,38 @@ def test_get_subscription_by_id__proper_response_is_returned():
     called_url = request_handler.get.call_args[0][0]
     assert BASE_URL + 'subscriptions/sub_id' == called_url
 
+
+@pytest.mark.parametrize('error_code', [400, 401, 403, 404, 500])
+def test_get_subscription__http_error_code__raises_api_error(error_code):
+    response = Mock()
+    response.status_code = error_code
+    response.text = '{"genericReply": {"RequestExceptionDescription": "error"}}'
+
+    request_handler = Mock()
+    request_handler.get = Mock(return_value=response)
+
+    client = GeofencingServiceClient(request_handler=request_handler)
+
+    with pytest.raises(APIError):
+        client.get_subscriptions()
+
+
+def test_get_subscriptions__proper_response_is_returned():
+    uas_zone_subscriptions_reply_dict, expected_uas_zone_subscriptions_reply = make_uas_zone_subscriptions_reply()
+
+    response = Mock()
+    response.status_code = 200
+    response.content = uas_zone_subscriptions_reply_dict
+    response.json = Mock(return_value=uas_zone_subscriptions_reply_dict)
+
+    request_handler = Mock()
+    request_handler.get = Mock(return_value=response)
+
+    client = GeofencingServiceClient(request_handler=request_handler)
+
+    uas_zone_subscriptions_reply = client.get_subscriptions()
+
+    assert expected_uas_zone_subscriptions_reply == uas_zone_subscriptions_reply
+
+    called_url = request_handler.get.call_args[0][0]
+    assert BASE_URL + 'subscriptions/' == called_url

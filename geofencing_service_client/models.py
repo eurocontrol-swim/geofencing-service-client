@@ -601,14 +601,14 @@ class SubscribeToUASZonesUpdatesReply(BaseModel):
         )
 
 
-class UASZoneSubscriptionReply(BaseModel):
+class UASZoneSubscriptionReplyObject(BaseModel):
 
-    def __init__(self, subscription_id: str, publication_location: str, active: bool, generic_reply: GenericReply):
+    def __init__(self, subscription_id: str, publication_location: str, active: bool, uas_zones_filter: UASZonesFilter):
         super().__init__()
         self.subscription_id = subscription_id
         self.publication_location = publication_location
         self.active = active
-        self.generic_reply = generic_reply
+        self.uas_zones_filter = uas_zones_filter
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -616,5 +616,44 @@ class UASZoneSubscriptionReply(BaseModel):
             subscription_id=object_dict['subscriptionID'],
             publication_location=object_dict['publicationLocation'],
             active=object_dict['active'],
+            uas_zones_filter=UASZonesFilter.from_json(object_dict['UASZonesFilter'])
+        )
+
+    def to_json(self) -> JSONType:
+        return {
+            'subscriptionID': self.subscription_id,
+            'publicationLocation': self.publication_location,
+            'active': self.active,
+            'UASZonesFilter': self.uas_zones_filter.to_json()
+        }
+
+
+class UASZoneSubscriptionReply(BaseModel):
+
+    def __init__(self, uas_zone_subscription: UASZoneSubscriptionReplyObject, generic_reply: GenericReply) -> None:
+        self.uas_zone_subscription = uas_zone_subscription
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            uas_zone_subscription=UASZoneSubscriptionReplyObject.from_json(object_dict['UASZoneSubscription']),
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )
+
+
+class UASZoneSubscriptionsReply(BaseModel):
+
+    def __init__(self, uas_zone_subscriptions: List[UASZoneSubscriptionReplyObject], generic_reply: GenericReply) -> None:
+        self.uas_zone_subscriptions = uas_zone_subscriptions
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            uas_zone_subscriptions=[
+                UASZoneSubscriptionReplyObject.from_json(subscription)
+                for subscription in object_dict['UASZoneSubscriptions']
+            ],
             generic_reply=GenericReply.from_json(object_dict['genericReply'])
         )
