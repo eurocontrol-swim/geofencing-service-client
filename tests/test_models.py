@@ -43,7 +43,7 @@ from geofencing_service_client.models import Point, AirspaceVolume, DailySchedul
 
 @pytest.mark.parametrize('point_json, expected_object', [
     (
-        {"LAT": "54.234234", "LON": "4.123423"}, Point(54.234234, 4.123423)
+        {"LON": "54.234234", "LAT": "4.123423"}, Point(54.234234, 4.123423)
     )
 ])
 def test_point__from_json(point_json, expected_object):
@@ -52,7 +52,7 @@ def test_point__from_json(point_json, expected_object):
 
 @pytest.mark.parametrize('point, expected_json', [
     (
-        Point(54.234234, 4.123423), {"LAT": "54.234234", "LON": "4.123423"}
+        Point(54.234234, 4.123423), {"LON": "54.234234", "LAT": "4.123423"}
     )
 
 ])
@@ -67,20 +67,20 @@ def test_to_json(point, expected_json):
             "lowerVerticalReference": "AGL",
             "polygon": [
                 {
-                    "LAT": "50.862525",
-                    "LON": "4.328120"
+                    "LON": "50.862525",
+                    "LAT": "4.328120"
                 },
                 {
-                    "LAT": "50.865502",
-                    "LON": "4.329257"
+                    "LON": "50.865502",
+                    "LAT": "4.329257"
                 },
                 {
-                    "LAT": "50.865468",
-                    "LON": "4.323686"
+                    "LON": "50.865468",
+                    "LAT": "4.323686"
                 },
                 {
-                    "LAT": "50.862525",
-                    "LON": "4.328120"
+                    "LON": "50.862525",
+                    "LAT": "4.328120"
                 }
             ],
             "upperLimit": 0,
@@ -92,10 +92,10 @@ def test_to_json(point, expected_json):
             upper_limit_in_m=0,
             upper_vertical_reference="AGL",
             polygon=[
-                Point(lat=50.862525, lon=4.328120),
-                Point(lat=50.865502, lon=4.329257),
-                Point(lat=50.865468, lon=4.323686),
-                Point(lat=50.862525, lon=4.328120)
+                Point(lon=50.862525, lat=4.328120),
+                Point(lon=50.865502, lat=4.329257),
+                Point(lon=50.865468, lat=4.323686),
+                Point(lon=50.862525, lat=4.328120)
             ]
         )
     )
@@ -112,10 +112,10 @@ def test_airspace_volume__from_json(airspace_volume_json, expected_object):
             upper_limit_in_m=0,
             upper_vertical_reference="AGL",
             polygon=[
-                Point(lat=50.862525, lon=4.328120),
-                Point(lat=50.865502, lon=4.329257),
-                Point(lat=50.865468, lon=4.323686),
-                Point(lat=50.862525, lon=4.328120)
+                Point(lon=50.862525, lat=4.328120),
+                Point(lon=50.865502, lat=4.329257),
+                Point(lon=50.865468, lat=4.323686),
+                Point(lon=50.862525, lat=4.328120)
             ]
         ),
         {
@@ -123,20 +123,20 @@ def test_airspace_volume__from_json(airspace_volume_json, expected_object):
             "lowerVerticalReference": "AGL",
             "polygon": [
                 {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
+                    "LON": "50.862525",
+                    "LAT": "4.32812"
                 },
                 {
-                    "LAT": "50.865502",
-                    "LON": "4.329257"
+                    "LON": "50.865502",
+                    "LAT": "4.329257"
                 },
                 {
-                    "LAT": "50.865468",
-                    "LON": "4.323686"
+                    "LON": "50.865468",
+                    "LAT": "4.323686"
                 },
                 {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
+                    "LON": "50.862525",
+                    "LAT": "4.32812"
                 }
             ],
             "upperLimit": 0,
@@ -579,20 +579,20 @@ def test_data_source__to_json(data_source, expected_json):
                 "lowerVerticalReference": "AGL",
                 "polygon": [
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     },
                     {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                        "LON": "50.865502",
+                        "LAT": "4.329257"
                     },
                     {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
+                        "LON": "50.865468",
+                        "LAT": "4.323686"
                     },
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     }
                 ],
                 "upperLimit": 0,
@@ -676,10 +676,10 @@ def test_data_source__to_json(data_source, expected_json):
                 upper_limit_in_m=0,
                 upper_vertical_reference="AGL",
                 polygon=[
-                    Point(lat=50.862525, lon=4.328120),
-                    Point(lat=50.865502, lon=4.329257),
-                    Point(lat=50.865468, lon=4.323686),
-                    Point(lat=50.862525, lon=4.328120)
+                    Point(lon=50.862525, lat=4.328120),
+                    Point(lon=50.865502, lat=4.329257),
+                    Point(lon=50.865468, lat=4.323686),
+                    Point(lon=50.862525, lat=4.328120)
                 ]
             ),
             applicable_time_period=ApplicableTimePeriod(
@@ -755,10 +755,10 @@ def test_uas_zone__from_json(uas_zone_json, expected_object):
                 upper_limit_in_m=0,
                 upper_vertical_reference="AGL",
                 polygon=[
-                    Point(lat=50.862525, lon=4.328120),
-                    Point(lat=50.865502, lon=4.329257),
-                    Point(lat=50.865468, lon=4.323686),
-                    Point(lat=50.862525, lon=4.328120)
+                    Point(lon=50.862525, lat=4.328120),
+                    Point(lon=50.865502, lat=4.329257),
+                    Point(lon=50.865468, lat=4.323686),
+                    Point(lon=50.862525, lat=4.328120)
                 ]
             ),
             applicable_time_period=ApplicableTimePeriod(
@@ -809,20 +809,20 @@ def test_uas_zone__from_json(uas_zone_json, expected_object):
                 "lowerVerticalReference": "AGL",
                 "polygon": [
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     },
                     {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                        "LON": "50.865502",
+                        "LAT": "4.329257"
                     },
                     {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
+                        "LON": "50.865468",
+                        "LAT": "4.323686"
                     },
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     }
                 ],
                 "upperLimit": 0,
@@ -897,20 +897,20 @@ def test_uas_zone__to_json(uas_zone, expected_json):
                 "lowerVerticalReference": "AGL",
                 "polygon": [
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.328120"
+                        "LON": "50.862525",
+                        "LAT": "4.328120"
                     },
                     {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                        "LON": "50.865502",
+                        "LAT": "4.329257"
                     },
                     {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
+                        "LON": "50.865468",
+                        "LAT": "4.323686"
                     },
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.328120"
+                        "LON": "50.862525",
+                        "LAT": "4.328120"
                     }
                 ],
                 "upperLimit": 0,
@@ -929,10 +929,10 @@ def test_uas_zone__to_json(uas_zone, expected_json):
                 upper_limit_in_m=0,
                 upper_vertical_reference="AGL",
                 polygon=[
-                    Point(lat=50.862525, lon=4.328120),
-                    Point(lat=50.865502, lon=4.329257),
-                    Point(lat=50.865468, lon=4.323686),
-                    Point(lat=50.862525, lon=4.328120)
+                    Point(lon=50.862525, lat=4.328120),
+                    Point(lon=50.865502, lat=4.329257),
+                    Point(lon=50.865468, lat=4.323686),
+                    Point(lon=50.862525, lat=4.328120)
                 ]
             ),
             regions=[1],
@@ -956,10 +956,10 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
                 upper_limit_in_m=0,
                 upper_vertical_reference="AGL",
                 polygon=[
-                    Point(lat=50.862525, lon=4.328120),
-                    Point(lat=50.865502, lon=4.329257),
-                    Point(lat=50.865468, lon=4.323686),
-                    Point(lat=50.862525, lon=4.328120)
+                    Point(lon=50.862525, lat=4.328120),
+                    Point(lon=50.865502, lat=4.329257),
+                    Point(lon=50.865468, lat=4.323686),
+                    Point(lon=50.862525, lat=4.328120)
                 ]
             ),
             regions=[1],
@@ -974,20 +974,20 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
                 "lowerVerticalReference": "AGL",
                 "polygon": [
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     },
                     {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                        "LON": "50.865502",
+                        "LAT": "4.329257"
                     },
                     {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
+                        "LON": "50.865468",
+                        "LAT": "4.323686"
                     },
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     }
                 ],
                 "upperLimit": 0,
@@ -1007,10 +1007,10 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
                 upper_limit_in_m=0,
                 upper_vertical_reference="AGL",
                 polygon=[
-                    Point(lat=50.862525, lon=4.328120),
-                    Point(lat=50.865502, lon=4.329257),
-                    Point(lat=50.865468, lon=4.323686),
-                    Point(lat=50.862525, lon=4.328120)
+                    Point(lon=50.862525, lat=4.328120),
+                    Point(lon=50.865502, lat=4.329257),
+                    Point(lon=50.865468, lat=4.323686),
+                    Point(lon=50.862525, lat=4.328120)
                 ]
             ),
             regions=[1],
@@ -1024,20 +1024,20 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
                 "lowerVerticalReference": "AGL",
                 "polygon": [
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     },
                     {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                        "LON": "50.865502",
+                        "LAT": "4.329257"
                     },
                     {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
+                        "LON": "50.865468",
+                        "LAT": "4.323686"
                     },
                     {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+                        "LON": "50.862525",
+                        "LAT": "4.32812"
                     }
                 ],
                 "upperLimit": 0,
@@ -1082,20 +1082,20 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
                         "lowerVerticalReference": "AGL",
                         "polygon": [
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.32812"
+                                "LON": "50.862525",
+                                "LAT": "4.32812"
                             },
                             {
-                                "LAT": "50.865502",
-                                "LON": "4.329257"
+                                "LON": "50.865502",
+                                "LAT": "4.329257"
                             },
                             {
-                                "LAT": "50.865468",
-                                "LON": "4.323686"
+                                "LON": "50.865468",
+                                "LAT": "4.323686"
                             },
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.32812"
+                                "LON": "50.862525",
+                                "LAT": "4.32812"
                             }
                         ],
                         "upperLimit": 0,
@@ -1188,10 +1188,10 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
                         upper_limit_in_m=0,
                         upper_vertical_reference="AGL",
                         polygon=[
-                            Point(lat=50.862525, lon=4.328120),
-                            Point(lat=50.865502, lon=4.329257),
-                            Point(lat=50.865468, lon=4.323686),
-                            Point(lat=50.862525, lon=4.328120)
+                            Point(lon=50.862525, lat=4.328120),
+                            Point(lon=50.865502, lat=4.329257),
+                            Point(lon=50.865468, lat=4.323686),
+                            Point(lon=50.862525, lat=4.328120)
                         ]
                     ),
                     applicable_time_period=ApplicableTimePeriod(
@@ -1258,20 +1258,20 @@ def test_uas_zones_filter_reply__from_json(uas_zones_filter_reply_json, expected
                     "lowerVerticalReference": "AGL",
                     "polygon": [
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.32812"
+                            "LON": "50.862525",
+                            "LAT": "4.32812"
                         },
                         {
-                            "LAT": "50.865502",
-                            "LON": "4.329257"
+                            "LON": "50.865502",
+                            "LAT": "4.329257"
                         },
                         {
-                            "LAT": "50.865468",
-                            "LON": "4.323686"
+                            "LON": "50.865468",
+                            "LAT": "4.323686"
                         },
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.32812"
+                            "LON": "50.862525",
+                            "LAT": "4.32812"
                         }
                     ],
                     "upperLimit": 0,
@@ -1362,10 +1362,10 @@ def test_uas_zones_filter_reply__from_json(uas_zones_filter_reply_json, expected
                     upper_limit_in_m=0,
                     upper_vertical_reference="AGL",
                     polygon=[
-                        Point(lat=50.862525, lon=4.328120),
-                        Point(lat=50.865502, lon=4.329257),
-                        Point(lat=50.865468, lon=4.323686),
-                        Point(lat=50.862525, lon=4.328120)
+                        Point(lon=50.862525, lat=4.328120),
+                        Point(lon=50.865502, lat=4.329257),
+                        Point(lon=50.865468, lat=4.323686),
+                        Point(lon=50.862525, lat=4.328120)
                     ]
                 ),
                 applicable_time_period=ApplicableTimePeriod(
@@ -1460,20 +1460,20 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
                     "lowerVerticalReference": "AGL",
                     "polygon": [
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.328120"
+                            "LON": "50.862525",
+                            "LAT": "4.328120"
                         },
                         {
-                            "LAT": "50.865502",
-                            "LON": "4.329257"
+                            "LON": "50.865502",
+                            "LAT": "4.329257"
                         },
                         {
-                            "LAT": "50.865468",
-                            "LON": "4.323686"
+                            "LON": "50.865468",
+                            "LAT": "4.323686"
                         },
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.328120"
+                            "LON": "50.862525",
+                            "LAT": "4.328120"
                         }
                     ],
                     "upperLimit": 0,
@@ -1497,10 +1497,10 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
                     upper_limit_in_m=0,
                     upper_vertical_reference="AGL",
                     polygon=[
-                        Point(lat=50.862525, lon=4.328120),
-                        Point(lat=50.865502, lon=4.329257),
-                        Point(lat=50.865468, lon=4.323686),
-                        Point(lat=50.862525, lon=4.328120)
+                        Point(lon=50.862525, lat=4.328120),
+                        Point(lon=50.865502, lat=4.329257),
+                        Point(lon=50.865468, lat=4.323686),
+                        Point(lon=50.862525, lat=4.328120)
                     ]
                 ),
                 regions=[1],
@@ -1529,10 +1529,10 @@ def test_uas_zone_subscription_reply_object__from_json(uas_zone_subscription_rep
                     upper_limit_in_m=0,
                     upper_vertical_reference="AGL",
                     polygon=[
-                        Point(lat=50.862525, lon=4.328120),
-                        Point(lat=50.865502, lon=4.329257),
-                        Point(lat=50.865468, lon=4.323686),
-                        Point(lat=50.862525, lon=4.328120)
+                        Point(lon=50.862525, lat=4.328120),
+                        Point(lon=50.865502, lat=4.329257),
+                        Point(lon=50.865468, lat=4.323686),
+                        Point(lon=50.862525, lat=4.328120)
                     ]
                 ),
                 regions=[1],
@@ -1552,20 +1552,20 @@ def test_uas_zone_subscription_reply_object__from_json(uas_zone_subscription_rep
                     "lowerVerticalReference": "AGL",
                     "polygon": [
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.32812"
+                            "LON": "50.862525",
+                            "LAT": "4.32812"
                         },
                         {
-                            "LAT": "50.865502",
-                            "LON": "4.329257"
+                            "LON": "50.865502",
+                            "LAT": "4.329257"
                         },
                         {
-                            "LAT": "50.865468",
-                            "LON": "4.323686"
+                            "LON": "50.865468",
+                            "LAT": "4.323686"
                         },
                         {
-                            "LAT": "50.862525",
-                            "LON": "4.32812"
+                            "LON": "50.862525",
+                            "LAT": "4.32812"
                         }
                     ],
                     "upperLimit": 0,
@@ -1597,20 +1597,20 @@ def test_uas_zone_subscription_reply_object__to_json(uas_zone_subscription_reply
                         "lowerVerticalReference": "AGL",
                         "polygon": [
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.328120"
+                                "LON": "50.862525",
+                                "LAT": "4.328120"
                             },
                             {
-                                "LAT": "50.865502",
-                                "LON": "4.329257"
+                                "LON": "50.865502",
+                                "LAT": "4.329257"
                             },
                             {
-                                "LAT": "50.865468",
-                                "LON": "4.323686"
+                                "LON": "50.865468",
+                                "LAT": "4.323686"
                             },
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.328120"
+                                "LON": "50.862525",
+                                "LAT": "4.328120"
                             }
                         ],
                         "upperLimit": 0,
@@ -1641,10 +1641,10 @@ def test_uas_zone_subscription_reply_object__to_json(uas_zone_subscription_reply
                         upper_limit_in_m=0,
                         upper_vertical_reference="AGL",
                         polygon=[
-                            Point(lat=50.862525, lon=4.328120),
-                            Point(lat=50.865502, lon=4.329257),
-                            Point(lat=50.865468, lon=4.323686),
-                            Point(lat=50.862525, lon=4.328120)
+                            Point(lon=50.862525, lat=4.328120),
+                            Point(lon=50.865502, lat=4.329257),
+                            Point(lon=50.865468, lat=4.323686),
+                            Point(lon=50.862525, lat=4.328120)
                         ]
                     ),
                     regions=[1],
@@ -1679,20 +1679,20 @@ def test_uas_zone_subscription_reply__from_json(uas_zone_subscription_reply_json
                         "lowerVerticalReference": "AGL",
                         "polygon": [
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.328120"
+                                "LON": "50.862525",
+                                "LAT": "4.328120"
                             },
                             {
-                                "LAT": "50.865502",
-                                "LON": "4.329257"
+                                "LON": "50.865502",
+                                "LAT": "4.329257"
                             },
                             {
-                                "LAT": "50.865468",
-                                "LON": "4.323686"
+                                "LON": "50.865468",
+                                "LAT": "4.323686"
                             },
                             {
-                                "LAT": "50.862525",
-                                "LON": "4.328120"
+                                "LON": "50.862525",
+                                "LAT": "4.328120"
                             }
                         ],
                         "upperLimit": 0,
@@ -1723,10 +1723,10 @@ def test_uas_zone_subscription_reply__from_json(uas_zone_subscription_reply_json
                         upper_limit_in_m=0,
                         upper_vertical_reference="AGL",
                         polygon=[
-                            Point(lat=50.862525, lon=4.328120),
-                            Point(lat=50.865502, lon=4.329257),
-                            Point(lat=50.865468, lon=4.323686),
-                            Point(lat=50.862525, lon=4.328120)
+                            Point(lon=50.862525, lat=4.328120),
+                            Point(lon=50.865502, lat=4.329257),
+                            Point(lon=50.865468, lat=4.323686),
+                            Point(lon=50.862525, lat=4.328120)
                         ]
                     ),
                     regions=[1],

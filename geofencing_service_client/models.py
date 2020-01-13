@@ -99,26 +99,26 @@ class RequestStatus(enum.Enum):
 
 class Point(BaseModel):
 
-    def __init__(self, lat: float, lon: float) -> None:
+    def __init__(self, lon: float, lat: float) -> None:
         """
 
-        :param lat:
         :param lon:
+        :param lat:
         """
-        self.lat = lat
         self.lon = lon
+        self.lat = lat
 
     @classmethod
     def from_json(cls, object_dict):
         return cls(
-            lat=float(object_dict['LAT']),
             lon=float(object_dict['LON']),
+            lat=float(object_dict['LAT'])
         )
 
     def to_json(self) -> Dict[str, str]:
         return {
-            "LAT": str(self.lat),
-            "LON": str(self.lon)
+            "LON": str(self.lon),
+            "LAT": str(self.lat)
         }
 
 
