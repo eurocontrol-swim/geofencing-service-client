@@ -30,6 +30,12 @@ Details on EUROCONTROL: http://www.eurocontrol.int
 
 __author__ = "EUROCONTROL (SWIM)"
 
+from datetime import datetime, timezone
+
 
 def get_time_from_datetime_iso(datetime_iso: str) -> str:
     return datetime_iso.split('T')[1]
+
+
+def make_timezone_aware(dt: datetime):
+    return dt.replace(tzinfo=timezone.utc)

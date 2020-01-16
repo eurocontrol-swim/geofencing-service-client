@@ -38,7 +38,7 @@ __author__ = "EUROCONTROL (SWIM)"
 
 from rest_client.typing import JSONType
 
-from geofencing_service_client.utils import get_time_from_datetime_iso
+from geofencing_service_client.utils import get_time_from_datetime_iso, make_timezone_aware
 
 GeoJSONPolygonCoordinates = List[List[List[Union[float, int]]]]
 
@@ -519,13 +519,13 @@ class UASZonesFilter(BaseModel):
         result = {
             "airspaceVolume": self.airspace_volume.to_json(),
             "regions": self.regions,
-            "startDateTime": self.start_date_time.isoformat(),
-            "endDateTime": self.end_date_time.isoformat(),
+            "startDateTime": make_timezone_aware(self.start_date_time).isoformat(),
+            "endDateTime": make_timezone_aware(self.end_date_time).isoformat(),
             "requestID": self.request_id
         }
 
         if self.updated_after_date_time:
-            result["updatedAfterDateTime"] = self.updated_after_date_time.isoformat()
+            result["updatedAfterDateTime"] = make_timezone_aware(self.updated_after_date_time).isoformat()
 
         return result
 
