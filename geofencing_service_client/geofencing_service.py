@@ -34,7 +34,7 @@ from rest_client.typing import RequestHandler
 
 from geofencing_service_client.errors import handle_geofencing_service_error
 from geofencing_service_client.models import UASZone, UASZonesFilter, UASZoneFilterReply, UASZoneCreateReply, \
-    SubscribeToUASZonesUpdatesReply, GenericReply, UASZoneSubscriptionReply, UASZoneSubscriptionsReply
+    SubscribeToUASZonesUpdatesReply, GenericReply, UASZoneSubscriptionReply, UASZoneSubscriptionsReply, Reply
 
 __author__ = "EUROCONTROL (SWIM)"
 
@@ -132,7 +132,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         return self.perform_request('GET', url, response_class=UASZoneSubscriptionReply)
 
     @handle_geofencing_service_error
-    def put_subscription(self, subscription_id: str, update_data: t.Dict[str, bool]) -> GenericReply:
+    def put_subscription(self, subscription_id: str, update_data: t.Dict[str, bool]) -> Reply:
         """
         It can be used to pause/resume a subscription by updating its status.
         Example:
@@ -145,10 +145,10 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         """
         url = self._url_subscription_by_id.format(subscription_id=subscription_id)
 
-        return self.perform_request('PUT', url, json=update_data, response_class=GenericReply)
+        return self.perform_request('PUT', url, json=update_data, response_class=Reply)
 
     @handle_geofencing_service_error
-    def delete_subscription_by_id(self, subscription_id: str) -> GenericReply:
+    def delete_subscription_by_id(self, subscription_id: str) -> Reply:
         """
         Unsubscribes the subscriber from the subscription by deleting the subscription
 
@@ -157,7 +157,7 @@ class GeofencingServiceClient(Requestor, ClientFactory):
         """
         url = self._url_subscription_by_id.format(subscription_id=subscription_id)
 
-        return self.perform_request('DELETE', url, response_class=GenericReply)
+        return self.perform_request('DELETE', url, response_class=Reply)
 
     def ping_credentials(self):
 

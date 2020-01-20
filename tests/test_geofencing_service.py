@@ -37,8 +37,8 @@ from rest_client.errors import APIError
 
 from geofencing_service_client.geofencing_service import GeofencingServiceClient
 from tests.utils import make_uas_zones_filter_reply, make_uas_zones_filter, make_uas_zone, make_uas_zone_create_reply, \
-    make_subscribe_to_uas_zones_updates_reply, test_make_generic_reply, make_uas_zone_subscription_reply_object, \
-    make_uas_zone_subscription_reply, make_uas_zone_subscriptions_reply
+    make_subscribe_to_uas_zones_updates_reply, make_generic_reply, make_uas_zone_subscription_reply_object, \
+    make_uas_zone_subscription_reply, make_uas_zone_subscriptions_reply, make_reply
 
 BASE_URL = 'geofencing-service/api/1.0/'
 
@@ -204,21 +204,21 @@ def test_put_subscription__http_error_code__raises_api_error(error_code):
 
 def test_put_subscription__proper_response_is_returned():
     _, uas_zones_filter = make_uas_zones_filter()
-    generic_reply_dict, expected_generic_reply = test_make_generic_reply()
+    reply_dict, expected_reply = make_reply()
 
     response = Mock()
     response.status_code = 200
-    response.content = generic_reply_dict
-    response.json = Mock(return_value=generic_reply_dict)
+    response.content = reply_dict
+    response.json = Mock(return_value=reply_dict)
 
     request_handler = Mock()
     request_handler.put = Mock(return_value=response)
 
     client = GeofencingServiceClient(request_handler=request_handler)
 
-    generic_reply = client.put_subscription(subscription_id='sub_id', update_data=Mock())
+    reply = client.put_subscription(subscription_id='sub_id', update_data=Mock())
 
-    assert expected_generic_reply == generic_reply
+    assert expected_reply == reply
 
     called_url = request_handler.put.call_args[0][0]
     assert BASE_URL + 'subscriptions/sub_id' == called_url
@@ -241,21 +241,21 @@ def test_delete_subscription_by_id__http_error_code__raises_api_error(error_code
 
 def test_delete_subscription_by_id__proper_response_is_returned():
     _, uas_zones_filter = make_uas_zones_filter()
-    generic_reply_dict, expected_generic_reply = test_make_generic_reply()
+    reply_dict, expected_reply = make_reply()
 
     response = Mock()
     response.status_code = 204
-    response.content = generic_reply_dict
-    response.json = Mock(return_value=generic_reply_dict)
+    response.content = reply_dict
+    response.json = Mock(return_value=reply_dict)
 
     request_handler = Mock()
     request_handler.delete = Mock(return_value=response)
 
     client = GeofencingServiceClient(request_handler=request_handler)
 
-    generic_reply = client.delete_subscription_by_id(subscription_id='sub_id')
+    reply = client.delete_subscription_by_id(subscription_id='sub_id')
 
-    assert expected_generic_reply == generic_reply
+    assert expected_reply == reply
 
     called_url = request_handler.delete.call_args[0][0]
     assert BASE_URL + 'subscriptions/sub_id' == called_url

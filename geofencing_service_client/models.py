@@ -555,11 +555,27 @@ class GenericReply(BaseModel):
         )
 
 
-class UASZoneFilterReply(BaseModel):
+class Reply(BaseModel):
+
+    def __init__(self, generic_reply: GenericReply):
+        """
+
+        :param generic_reply:
+        """
+        self.generic_reply = generic_reply
+
+    @classmethod
+    def from_json(cls, object_dict: JSONType):
+        return cls(
+            generic_reply=GenericReply.from_json(object_dict['genericReply'])
+        )
+
+
+class UASZoneFilterReply(Reply):
 
     def __init__(self, uas_zone_list: List[UASZone], generic_reply: GenericReply):
+        super().__init__(generic_reply)
         self.uas_zone_list = uas_zone_list
-        self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -569,12 +585,11 @@ class UASZoneFilterReply(BaseModel):
         )
 
 
-class UASZoneCreateReply(BaseModel):
+class UASZoneCreateReply(Reply):
 
     def __init__(self, uas_zone: UASZone, generic_reply: GenericReply):
-        super().__init__()
+        super().__init__(generic_reply)
         self.uas_zone = uas_zone
-        self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -584,13 +599,12 @@ class UASZoneCreateReply(BaseModel):
         )
 
 
-class SubscribeToUASZonesUpdatesReply(BaseModel):
+class SubscribeToUASZonesUpdatesReply(Reply):
 
     def __init__(self, subscription_id: str, publication_location: str, generic_reply: GenericReply):
-        super().__init__()
+        super().__init__(generic_reply)
         self.subscription_id = subscription_id
         self.publication_location = publication_location
-        self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -604,7 +618,6 @@ class SubscribeToUASZonesUpdatesReply(BaseModel):
 class UASZoneSubscriptionReplyObject(BaseModel):
 
     def __init__(self, subscription_id: str, publication_location: str, active: bool, uas_zones_filter: UASZonesFilter):
-        super().__init__()
         self.subscription_id = subscription_id
         self.publication_location = publication_location
         self.active = active
@@ -628,11 +641,11 @@ class UASZoneSubscriptionReplyObject(BaseModel):
         }
 
 
-class UASZoneSubscriptionReply(BaseModel):
+class UASZoneSubscriptionReply(Reply):
 
     def __init__(self, uas_zone_subscription: UASZoneSubscriptionReplyObject, generic_reply: GenericReply) -> None:
+        super().__init__(generic_reply)
         self.uas_zone_subscription = uas_zone_subscription
-        self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -642,11 +655,11 @@ class UASZoneSubscriptionReply(BaseModel):
         )
 
 
-class UASZoneSubscriptionsReply(BaseModel):
+class UASZoneSubscriptionsReply(Reply):
 
     def __init__(self, uas_zone_subscriptions: List[UASZoneSubscriptionReplyObject], generic_reply: GenericReply) -> None:
+        super().__init__(generic_reply)
         self.uas_zone_subscriptions = uas_zone_subscriptions
-        self.generic_reply = generic_reply
 
     @classmethod
     def from_json(cls, object_dict: JSONType):

@@ -34,7 +34,7 @@ from typing import Tuple, Dict, Any
 
 from geofencing_service_client.models import UASZonesFilter, UASZone, GenericReply, UASZoneFilterReply, \
     UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReplyObject, UASZoneSubscriptionReply, \
-    UASZoneSubscriptionsReply
+    UASZoneSubscriptionsReply, Reply
 
 
 def make_uas_zones_filter() -> Tuple[Dict[str, Any], UASZonesFilter]:
@@ -162,7 +162,7 @@ def make_uas_zone() -> Tuple[Dict[str, Any], UASZone]:
     return uas_zone_dict, uas_zone
 
 
-def test_make_generic_reply() -> Tuple[Dict[str, Any], GenericReply]:
+def make_generic_reply() -> Tuple[Dict[str, Any], GenericReply]:
     generic_reply_dict = {
         'RequestStatus': 'OK',
         'RequestExceptionDescription': 'everything ok',
@@ -172,6 +172,20 @@ def test_make_generic_reply() -> Tuple[Dict[str, Any], GenericReply]:
     generic_reply = GenericReply.from_json(generic_reply_dict)
 
     return generic_reply_dict, generic_reply
+
+
+def make_reply() -> Tuple[Dict[str, Any], Reply]:
+    reply_dict = {
+        'genericReply': {
+            'RequestStatus': 'OK',
+            'RequestExceptionDescription': 'everything ok',
+            'RequestProcessedTimestamp': '2019-01-01T00:00:00+00:00'
+        }
+    }
+
+    reply = Reply.from_json(reply_dict)
+
+    return reply_dict, reply
 
 
 def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
