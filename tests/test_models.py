@@ -34,11 +34,11 @@ from datetime import datetime, timezone
 
 import pytest
 
-from geofencing_service_client.models import Point, AirspaceVolume, DailySchedule, CodeWeekDay, ApplicableTimePeriod, \
-    CodeYesNoType, AuthorityEntity, NotificationRequirement, AuthorizationRequirement, Authority, DataSource, UASZone, \
-    CodeRestrictionType, CodeUSpaceClassType, CodeZoneType, UASZonesFilter, GenericReply, RequestStatus, \
-    UASZoneFilterReply, UASZoneCreateReply, SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReplyObject, \
-    UASZoneSubscriptionReply, UASZoneSubscriptionsReply
+from geofencing_service_client.models import AirspaceVolume, DailyPeriod, CodeWeekDay, TimePeriod, \
+    CodeYesNoType, Authority, UASZone, CodeRestrictionType, CodeUSpaceClassType, CodeZoneType, \
+    UASZonesFilter, GenericReply, RequestStatus, UASZoneFilterReply, UASZoneCreateReply, \
+    SubscribeToUASZonesUpdatesReply, UASZoneSubscriptionReplyObject, UASZoneSubscriptionReply, \
+    UASZoneSubscriptionsReply
 
 
 @pytest.mark.parametrize('point_json, expected_object', [
@@ -87,11 +87,11 @@ def test_to_json(point, expected_json):
             "upperVerticalReference": "AGL"
         },
         AirspaceVolume(
-            lower_limit_in_m=0,
+            lower_limit=0,
             lower_vertical_reference="AGL",
-            upper_limit_in_m=0,
+            upper_limit=0,
             upper_vertical_reference="AGL",
-            polygon=[
+            horizontal_projection=[
                 Point(lon=50.862525, lat=4.328120),
                 Point(lon=50.865502, lat=4.329257),
                 Point(lon=50.865468, lat=4.323686),
@@ -107,11 +107,11 @@ def test_airspace_volume__from_json(airspace_volume_json, expected_object):
 @pytest.mark.parametrize('airspace_volume, expected_json', [
     (
         AirspaceVolume(
-            lower_limit_in_m=0,
+            lower_limit=0,
             lower_vertical_reference="AGL",
-            upper_limit_in_m=0,
+            upper_limit=0,
             upper_vertical_reference="AGL",
-            polygon=[
+            horizontal_projection=[
                 Point(lon=50.862525, lat=4.328120),
                 Point(lon=50.865502, lat=4.329257),
                 Point(lon=50.865468, lat=4.323686),
@@ -151,12 +151,12 @@ def test_airspace_volume__to_json(airspace_volume, expected_json):
 
 @pytest.mark.parametrize('daily_schedule_json, expected_object', [
     (
-        {
+            {
             'day': 'MON',
             'endTime': '18:00:00+00:00',
             'startTime': '12:00:00+00:00'
         },
-        DailySchedule(
+            DailyPeriod(
             day=CodeWeekDay.MON,
             start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
             end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
@@ -164,12 +164,12 @@ def test_airspace_volume__to_json(airspace_volume, expected_json):
     )
 ])
 def test_daily_schedule__from_json(daily_schedule_json, expected_object):
-    assert expected_object == DailySchedule.from_json(daily_schedule_json)
+    assert expected_object == DailyPeriod.from_json(daily_schedule_json)
 
 
 @pytest.mark.parametrize('daily_schedule, expected_json', [
     (
-            DailySchedule(
+            DailyPeriod(
                 day=CodeWeekDay.MON,
                 start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                 end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
@@ -187,7 +187,7 @@ def test_daily_schedule__to_json(daily_schedule, expected_json):
 
 @pytest.mark.parametrize('applicable_time_period_json, expected_object', [
     (
-        {
+            {
             'dailySchedule': [{
                 'day': 'MON',
                  'endTime': '18:00:00+00:00',
@@ -201,17 +201,17 @@ def test_daily_schedule__to_json(daily_schedule, expected_json):
             'permanent': 'YES',
             'startDateTime': '2020-01-01T00:00:00+00:00',
         },
-        ApplicableTimePeriod(
+            TimePeriod(
             permanent=CodeYesNoType.YES,
             start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
             end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-            daily_schedule=[
-                DailySchedule(
+            schedule=[
+                DailyPeriod(
                     day=CodeWeekDay.MON,
                     start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                     end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                 ),
-                DailySchedule(
+                DailyPeriod(
                     day=CodeWeekDay.SAT,
                     start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                     end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
@@ -221,29 +221,29 @@ def test_daily_schedule__to_json(daily_schedule, expected_json):
     )
 ])
 def test_applicable_time_period__from_json(applicable_time_period_json, expected_object):
-    assert expected_object == ApplicableTimePeriod.from_json(applicable_time_period_json)
+    assert expected_object == TimePeriod.from_json(applicable_time_period_json)
 
 
 @pytest.mark.parametrize('applicable_time_period, expected_json', [
     (
-        ApplicableTimePeriod(
+            TimePeriod(
             permanent=CodeYesNoType.YES,
             start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
             end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-            daily_schedule=[
-                DailySchedule(
+            schedule=[
+                DailyPeriod(
                     day=CodeWeekDay.MON,
                     start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                     end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                 ),
-                DailySchedule(
+                DailyPeriod(
                     day=CodeWeekDay.SAT,
                     start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                     end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
                 )
             ]
         ),
-        {
+            {
             'dailySchedule': [{
                 'day': 'MON',
                  'endTime': '18:00:00+00:00',
@@ -671,28 +671,28 @@ def test_data_source__to_json(data_source, expected_json):
                 update_date_time=datetime(2019, 1, 2, 0, 0, 0, tzinfo=timezone.utc),
             ),
             airspace_volume=AirspaceVolume(
-                lower_limit_in_m=0,
+                lower_limit=0,
                 lower_vertical_reference="AGL",
-                upper_limit_in_m=0,
+                upper_limit=0,
                 upper_vertical_reference="AGL",
-                polygon=[
+                horizontal_projection=[
                     Point(lon=50.862525, lat=4.328120),
                     Point(lon=50.865502, lat=4.329257),
                     Point(lon=50.865468, lat=4.323686),
                     Point(lon=50.862525, lat=4.328120)
                 ]
             ),
-            applicable_time_period=ApplicableTimePeriod(
+            applicable_time_period=TimePeriod(
                 permanent=CodeYesNoType.YES,
                 start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
                 end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-                daily_schedule=[
-                    DailySchedule(
+                schedule=[
+                    DailyPeriod(
                         day=CodeWeekDay.MON,
                         start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                         end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                     ),
-                    DailySchedule(
+                    DailyPeriod(
                         day=CodeWeekDay.SAT,
                         start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                         end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
@@ -750,28 +750,28 @@ def test_uas_zone__from_json(uas_zone_json, expected_object):
                 update_date_time=datetime(2019, 1, 2, 0, 0, 0, tzinfo=timezone.utc),
             ),
             airspace_volume=AirspaceVolume(
-                lower_limit_in_m=0,
+                lower_limit=0,
                 lower_vertical_reference="AGL",
-                upper_limit_in_m=0,
+                upper_limit=0,
                 upper_vertical_reference="AGL",
-                polygon=[
+                horizontal_projection=[
                     Point(lon=50.862525, lat=4.328120),
                     Point(lon=50.865502, lat=4.329257),
                     Point(lon=50.865468, lat=4.323686),
                     Point(lon=50.862525, lat=4.328120)
                 ]
             ),
-            applicable_time_period=ApplicableTimePeriod(
+            applicable_time_period=TimePeriod(
                 permanent=CodeYesNoType.YES,
                 start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
                 end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-                daily_schedule=[
-                    DailySchedule(
+                schedule=[
+                    DailyPeriod(
                         day=CodeWeekDay.MON,
                         start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                         end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                     ),
-                    DailySchedule(
+                    DailyPeriod(
                         day=CodeWeekDay.SAT,
                         start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                         end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
@@ -924,11 +924,11 @@ def test_uas_zone__to_json(uas_zone, expected_json):
         },
         UASZonesFilter(
             airspace_volume=AirspaceVolume(
-                lower_limit_in_m=0,
+                lower_limit=0,
                 lower_vertical_reference="AGL",
-                upper_limit_in_m=0,
+                upper_limit=0,
                 upper_vertical_reference="AGL",
-                polygon=[
+                horizontal_projection=[
                     Point(lon=50.862525, lat=4.328120),
                     Point(lon=50.865502, lat=4.329257),
                     Point(lon=50.865468, lat=4.323686),
@@ -951,11 +951,11 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
     (
         UASZonesFilter(
             airspace_volume=AirspaceVolume(
-                lower_limit_in_m=0,
+                lower_limit=0,
                 lower_vertical_reference="AGL",
-                upper_limit_in_m=0,
+                upper_limit=0,
                 upper_vertical_reference="AGL",
-                polygon=[
+                horizontal_projection=[
                     Point(lon=50.862525, lat=4.328120),
                     Point(lon=50.865502, lat=4.329257),
                     Point(lon=50.865468, lat=4.323686),
@@ -1002,11 +1002,11 @@ def test_uas_zones_filter__from_json(uas_zones_filter_json, expected_object):
     ),(
         UASZonesFilter(
             airspace_volume=AirspaceVolume(
-                lower_limit_in_m=0,
+                lower_limit=0,
                 lower_vertical_reference="AGL",
-                upper_limit_in_m=0,
+                upper_limit=0,
                 upper_vertical_reference="AGL",
-                polygon=[
+                horizontal_projection=[
                     Point(lon=50.862525, lat=4.328120),
                     Point(lon=50.865502, lat=4.329257),
                     Point(lon=50.865468, lat=4.323686),
@@ -1183,28 +1183,28 @@ def test_generic_reply__from_json(generic_reply_json, expected_object):
                         update_date_time=datetime(2019, 1, 2, 0, 0, 0, tzinfo=timezone.utc),
                     ),
                     airspace_volume=AirspaceVolume(
-                        lower_limit_in_m=0,
+                        lower_limit=0,
                         lower_vertical_reference="AGL",
-                        upper_limit_in_m=0,
+                        upper_limit=0,
                         upper_vertical_reference="AGL",
-                        polygon=[
+                        horizontal_projection=[
                             Point(lon=50.862525, lat=4.328120),
                             Point(lon=50.865502, lat=4.329257),
                             Point(lon=50.865468, lat=4.323686),
                             Point(lon=50.862525, lat=4.328120)
                         ]
                     ),
-                    applicable_time_period=ApplicableTimePeriod(
+                    applicable_time_period=TimePeriod(
                         permanent=CodeYesNoType.YES,
                         start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
                         end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-                        daily_schedule=[
-                            DailySchedule(
+                        schedule=[
+                            DailyPeriod(
                                 day=CodeWeekDay.MON,
                                 start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                                 end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                             ),
-                            DailySchedule(
+                            DailyPeriod(
                                 day=CodeWeekDay.SAT,
                                 start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                                 end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
@@ -1357,28 +1357,28 @@ def test_uas_zones_filter_reply__from_json(uas_zones_filter_reply_json, expected
                     update_date_time=datetime(2019, 1, 2, 0, 0, 0, tzinfo=timezone.utc),
                 ),
                 airspace_volume=AirspaceVolume(
-                    lower_limit_in_m=0,
+                    lower_limit=0,
                     lower_vertical_reference="AGL",
-                    upper_limit_in_m=0,
+                    upper_limit=0,
                     upper_vertical_reference="AGL",
-                    polygon=[
+                    horizontal_projection=[
                         Point(lon=50.862525, lat=4.328120),
                         Point(lon=50.865502, lat=4.329257),
                         Point(lon=50.865468, lat=4.323686),
                         Point(lon=50.862525, lat=4.328120)
                     ]
                 ),
-                applicable_time_period=ApplicableTimePeriod(
+                applicable_time_period=TimePeriod(
                     permanent=CodeYesNoType.YES,
                     start_date_time=datetime(2020, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
                     end_date_time=datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
-                    daily_schedule=[
-                        DailySchedule(
+                    schedule=[
+                        DailyPeriod(
                             day=CodeWeekDay.MON,
                             start_time=datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc),
                             end_time=datetime(2000, 1, 1, 18, 0, 0, tzinfo=timezone.utc)
                         ),
-                        DailySchedule(
+                        DailyPeriod(
                             day=CodeWeekDay.SAT,
                             start_time=datetime(2000, 1, 1, 9, 0, 0, tzinfo=timezone.utc),
                             end_time=datetime(2000, 1, 1, 15, 0, 0, tzinfo=timezone.utc)
@@ -1492,11 +1492,11 @@ def test_subscribe_to_uas_zones_updates_reply__from_json(subscribe_to_uas_zones_
             active=True,
             uas_zones_filter=UASZonesFilter(
                 airspace_volume=AirspaceVolume(
-                    lower_limit_in_m=0,
+                    lower_limit=0,
                     lower_vertical_reference="AGL",
-                    upper_limit_in_m=0,
+                    upper_limit=0,
                     upper_vertical_reference="AGL",
-                    polygon=[
+                    horizontal_projection=[
                         Point(lon=50.862525, lat=4.328120),
                         Point(lon=50.865502, lat=4.329257),
                         Point(lon=50.865468, lat=4.323686),
@@ -1524,11 +1524,11 @@ def test_uas_zone_subscription_reply_object__from_json(uas_zone_subscription_rep
             active=True,
             uas_zones_filter=UASZonesFilter(
                 airspace_volume=AirspaceVolume(
-                    lower_limit_in_m=0,
+                    lower_limit=0,
                     lower_vertical_reference="AGL",
-                    upper_limit_in_m=0,
+                    upper_limit=0,
                     upper_vertical_reference="AGL",
-                    polygon=[
+                    horizontal_projection=[
                         Point(lon=50.862525, lat=4.328120),
                         Point(lon=50.865502, lat=4.329257),
                         Point(lon=50.865468, lat=4.323686),
@@ -1630,17 +1630,17 @@ def test_uas_zone_subscription_reply_object__to_json(uas_zone_subscription_reply
             }
         },
         UASZoneSubscriptionReply(
-            uas_zone_subscription=UASZoneSubscriptionReplyObject(
+            subscription=UASZoneSubscriptionReplyObject(
                 subscription_id='123456',
                 publication_location='location',
                 active=True,
                 uas_zones_filter=UASZonesFilter(
                     airspace_volume=AirspaceVolume(
-                        lower_limit_in_m=0,
+                        lower_limit=0,
                         lower_vertical_reference="AGL",
-                        upper_limit_in_m=0,
+                        upper_limit=0,
                         upper_vertical_reference="AGL",
-                        polygon=[
+                        horizontal_projection=[
                             Point(lon=50.862525, lat=4.328120),
                             Point(lon=50.865502, lat=4.329257),
                             Point(lon=50.865468, lat=4.323686),
@@ -1712,17 +1712,17 @@ def test_uas_zone_subscription_reply__from_json(uas_zone_subscription_reply_json
             }
         },
         UASZoneSubscriptionsReply(
-            uas_zone_subscriptions=[UASZoneSubscriptionReplyObject(
+            subscriptions=[UASZoneSubscriptionReplyObject(
                 subscription_id='123456',
                 publication_location='location',
                 active=True,
                 uas_zones_filter=UASZonesFilter(
                     airspace_volume=AirspaceVolume(
-                        lower_limit_in_m=0,
+                        lower_limit=0,
                         lower_vertical_reference="AGL",
-                        upper_limit_in_m=0,
+                        upper_limit=0,
                         upper_vertical_reference="AGL",
-                        polygon=[
+                        horizontal_projection=[
                             Point(lon=50.862525, lat=4.328120),
                             Point(lon=50.865502, lat=4.329257),
                             Point(lon=50.865468, lat=4.323686),

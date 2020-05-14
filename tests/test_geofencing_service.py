@@ -36,8 +36,8 @@ __author__ = "EUROCONTROL (SWIM)"
 from rest_client.errors import APIError
 
 from geofencing_service_client.geofencing_service import GeofencingServiceClient
-from tests.utils import make_uas_zones_filter_reply, make_uas_zones_filter, make_uas_zone, make_uas_zone_create_reply, \
-    make_subscribe_to_uas_zones_updates_reply, make_generic_reply, make_uas_zone_subscription_reply_object, \
+from tests.utils import make_uas_zones_filter_reply, make_uas_zones_filter, \
+    make_uas_zone, make_uas_zone_create_reply, make_subscribe_to_uas_zones_updates_reply, \
     make_uas_zone_subscription_reply, make_uas_zone_subscriptions_reply, make_reply
 
 BASE_URL = 'geofencing-service/api/1.0/'
