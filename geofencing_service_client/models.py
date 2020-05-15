@@ -378,7 +378,7 @@ class UASZone(BaseModel):
         self.name = name
         self.restriction_conditions = restriction_conditions
         self.region = region
-        self.reason = reason
+        self.reason = [CodeZoneReasonType(r) for r in reason if r is not None]
         self.other_reason_info = other_reason_info
         self.regulation_exemption = CodeYesNoType(regulation_exemption) if regulation_exemption \
             else None
@@ -419,7 +419,7 @@ class UASZone(BaseModel):
             'name': self.name,
             'restrictionConditions': self.restriction_conditions,
             'region': self.region,
-            'reason': [reason.value for reason in self.reason],
+            'reason': [r.value for r in self.reason],
             'otherReasonInfo': self.other_reason_info,
             'regulationExemption': self.regulation_exemption.value,
             'uSpaceClass': self.u_space_class.value,
