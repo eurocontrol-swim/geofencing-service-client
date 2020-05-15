@@ -100,17 +100,21 @@ class UomDistance(enum.Enum):
     METERS = 'M'
     FEET = 'FT'
 
+class CodeAuthorityRole(enum.Enum):
+    AUTHORIZATION = "AUTHORIZATION"
+    NOTIFICATION = "NOTIFICATION"
+    INFORMATION = "INFORMATION"
+
 
 class Polygon(BaseModel):
 
-    def __init__(self, type: str, coordinates: List[List[List[float]]]):
-        self.type= type
+    def __init__(self, coordinates: List[List[List[float]]]):
+        self.type= "Polygon"
         self.coordinates = coordinates
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            type=object_dict['type'],
             coordinates=object_dict['coordinates']
         )
 
@@ -123,15 +127,14 @@ class Polygon(BaseModel):
 
 class Circle(BaseModel):
 
-    def __init__(self, type: str, center: List[float], radius: float) -> None:
-        self.type= type
+    def __init__(self, center: List[float], radius: float) -> None:
+        self.type= "Circle"
         self.center = center
         self.radius = radius
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
         return cls(
-            type=object_dict['type'],
             center=object_dict['center'],
             radius=object_dict['radius']
         )
@@ -142,6 +145,7 @@ class Circle(BaseModel):
             "center": self.center,
             "radius": self.radius
         }
+
 
 class AirspaceVolume(BaseModel):
 
@@ -170,14 +174,14 @@ class AirspaceVolume(BaseModel):
 
     @classmethod
     def from_json(cls, object_dict):
-        if object_dict['horizontal_projection']['type'] == 'Circle':
-            horizontal_projection = Circle.from_json(object_dict['horizontal_projection'])
+        if object_dict['horizontalProjection']['type'] == 'Circle':
+            horizontal_projection = Circle.from_json(object_dict['horizontalProjection'])
         else:
-            horizontal_projection = Polygon.from_json(object_dict['horizontal_projection'])
+            horizontal_projection = Polygon.from_json(object_dict['horizontalProjection'])
 
         return cls(
             horizontal_projection=horizontal_projection,
-            uom_dimensions=object_dict.get("uom_dimensions"),
+            uom_dimensions=object_dict.get("uomDimensions"),
             upper_limit=object_dict.get("upperLimit"),
             lower_limit=object_dict.get("lowerLimit"),
             upper_vertical_reference=object_dict.get("upperVerticalReference"),
@@ -191,7 +195,8 @@ class AirspaceVolume(BaseModel):
             horizontal_projection = Polygon.to_json(self.horizontal_projection)
 
         return {
-            "horizontal_projection": horizontal_projection,
+            "uomDimensions": self.uom_dimensions,
+            "horizontalProjection": horizontal_projection,
             "upperLimit": self.upper_limit,
             "lowerLimit": self.lower_limit,
             "upperVerticalReference": self.upper_vertical_reference.value,
@@ -275,12 +280,12 @@ class Authority(BaseModel):
     def __init__(self,
                  name: str,
                  service: str,
-                 purpose: str,
+                 purpose: Union[str, CodeAuthorityRole],
                  email: Optional[str] = None,
                  contact_name: Optional[str] = None,
                  site_url: Optional[str] = None,
                  phone: Optional[str] = None,
-                 intervalBefore: Optional[str] = None) -> None:
+                 interval_before: Optional[str] = None) -> None:
         """
 
         :param name:
@@ -290,16 +295,16 @@ class Authority(BaseModel):
         :param contact_name:
         :param site_url:
         :param phone:
-        :param intervalBefore:
+        :param interval_before:
         """
         self.name = name
         self.service = service
-        self.purpose = purpose
+        self.purpose = CodeAuthorityRole(purpose)
         self.email = email
         self.contact_name = contact_name
         self.site_url = site_url
         self.phone = phone
-        self.intervalBefore = intervalBefore
+        self.interval_before = interval_before
 
     @classmethod
     def from_json(cls, object_dict: JSONType):
@@ -311,19 +316,19 @@ class Authority(BaseModel):
             contact_name=object_dict.get('contactName'),
             site_url=object_dict.get('siteURL'),
             phone=object_dict.get('phone'),
-            intervalBefore=object_dict.get('intervalBefore')
+            interval_before=object_dict.get('intervalBefore')
         )
 
     def to_json(self) -> JSONType:
         return {
             'name': self.name,
             'service': self.service,
-            'purpose': self.purpose,
+            'purpose': self.purpose.value,
             'email': self.email,
             'contactName': self.contact_name,
             'siteURL': self.site_url,
             'phone': self.phone,
-            'intervalBefore': self.intervalBefore
+            'intervalBefore': self.interval_before
         }
 
 
@@ -389,7 +394,7 @@ class UASZone(BaseModel):
             country=object_dict['country'],
             type=CodeZoneType(object_dict['type']),
             restriction=object_dict['restriction'],
-            zone_authority=Authority.from_json(object_dict['zone_authority']),
+            zone_authority=Authority.from_json(object_dict['zoneAuthority']),
             geometry=[AirspaceVolume.from_json(geo) for geo in object_dict['geometry']],
             name=object_dict['name'],
             restriction_conditions=object_dict['restrictionConditions'],
