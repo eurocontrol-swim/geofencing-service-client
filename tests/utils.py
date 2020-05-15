@@ -42,32 +42,23 @@ def make_uas_zones_filter() -> Tuple[Dict[str, Any], UASZonesFilter]:
         'airspaceVolume': {
             "lowerLimit": 0,
             "lowerVerticalReference": "AGL",
-            "polygon": [
-                {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
-                },
-                {
-                    "LAT": "50.865502",
-                    "LON": "4.329257"
-                },
-                {
-                    "LAT": "50.865468",
-                    "LON": "4.323686"
-                },
-                {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
-                }
-            ],
+            "horizontalProjection": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [2.485866, 49.029301],
+                    [2.604141, 49.034704],
+                    [2.631263, 48.987301],
+                    [2.510414, 48.983358],
+                    [2.485866, 49.029301]
+                ]]
+            },
+            "uomDimensions": "M",
             "upperLimit": 0,
             "upperVerticalReference": "AGL"
         },
         'regions': [1],
-        'requestID': 'request',
         'startDateTime': '2020-01-01T00:00:00+00:00',
         'endDateTime': '2020-02-01T00:00:00+00:00',
-        'updatedAfterDateTime': '2020-01-15T00:00:00+00:00',
     }
 
     uas_zones_filter = UASZonesFilter.from_json(usa_zones_filter_dict)
@@ -77,32 +68,39 @@ def make_uas_zones_filter() -> Tuple[Dict[str, Any], UASZonesFilter]:
 
 def make_uas_zone() -> Tuple[Dict[str, Any], UASZone]:
     uas_zone_dict = {
-        'airspaceVolume': {
-            "lowerLimit": 0,
-            "lowerVerticalReference": "AGL",
-            "polygon": [
-                {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
+        'geometry': [
+            {
+                "lowerLimit": 0,
+                "lowerVerticalReference": "AGL",
+                "horizontalProjection": {
+                    "type": "Polygon",
+                    "coordinates": [[
+                        [2.485866, 49.029301],
+                        [2.604141, 49.034704],
+                        [2.631263, 48.987301],
+                        [2.510414, 48.983358],
+                        [2.485866, 49.029301]
+                    ]]
                 },
-                {
-                    "LAT": "50.865502",
-                    "LON": "4.329257"
+                "uomDimensions": "M",
+                "upperLimit": 0,
+                "upperVerticalReference": "AGL"
+            },
+            {
+                "lowerLimit": 0,
+                "lowerVerticalReference": "AGL",
+                "horizontalProjection": {
+                    "type": "Circle",
+                    "center": [2.485866, 49.029301],
+                    "radius": 7000
                 },
-                {
-                    "LAT": "50.865468",
-                    "LON": "4.323686"
-                },
-                {
-                    "LAT": "50.862525",
-                    "LON": "4.32812"
-                }
-            ],
-            "upperLimit": 0,
-            "upperVerticalReference": "AGL"
-        },
-        'applicableTimePeriod': {
-            'dailySchedule': [{
+                "uomDimensions": "M",
+                "upperLimit": 0,
+                "upperVerticalReference": "AGL"
+            }
+        ],
+        'applicability': {
+            'schedule': [{
                 'day': 'MON',
                 'endTime': '18:00:00+00:00',
                 'startTime': '12:00:00+00:00'
@@ -115,41 +113,24 @@ def make_uas_zone() -> Tuple[Dict[str, Any], UASZone]:
             'permanent': 'YES',
             'startDateTime': '2020-01-01T00:00:00+00:00',
         },
-        'authority': {
-            'requiresAuthorizationFrom': {
-                'authority': {
-                    'contactName': 'AuthorityEntity manager',
-                    'email': 'auth@autority.be',
-                    'name': '175d280099fb48eea5da490ac12f816a',
-                    'phone': '234234234',
-                    'service': 'AuthorityEntity service',
-                    'siteURL': 'http://www.autority.be'
-                }
-            },
-            'requiresNotificationTo': {
-                'authority': {
-                    'contactName': 'AuthorityEntity manager',
-                    'email': 'auth@autority.be',
-                    'name': '175d280099fb48eea5da490ac12f816a',
-                    'phone': '234234234',
-                    'service': 'AuthorityEntity service',
-                    'siteURL': 'http://www.autority.be'
-                },
-                'intervalBefore': 'P1D'
-            }
+        'zoneAuthority': {
+            'name': '175d280099fb48eea5da490ac12f816a',
+            'service': 'AuthorityEntity service',
+            'purpose': 'AUTHORIZATION',
+            'email': 'auth@autority.be',
+            'contactName': 'AuthorityEntity manager',
+            'siteURL': 'http://www.autority.be',
+            'phone': '234234234',
+            'intervalBefore': 'PD30'
         },
         'country': 'BEL',
-        'dataCaptureProhibition': 'YES',
-        'dataSource': {
-            'author': 'Author',
-            'creationDateTime': '2019-01-01T00:00:00+00:00',
-            'updateDateTime': '2019-01-02T00:00:00+00:00'
-        },
+        'regulationExemption': 'YES',
         'extendedProperties': {},
         'identifier': "zsdffgs",
         'message': 'message',
         'name': "",
         'reason': [],
+        'otherReasonInfo': "",
         'region': 1,
         'restriction': 'NO_RESTRICTION',
         'restrictionConditions': [],
@@ -192,32 +173,39 @@ def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
     uas_zones_filter_reply_dict = {
             'UASZoneList': [
                 {
-                    'airspaceVolume': {
-                        "lowerLimit": 0,
-                        "lowerVerticalReference": "AGL",
-                        "polygon": [
-                            {
-                                "LAT": "50.862525",
-                                "LON": "4.32812"
+                    'geometry': [
+                        {
+                            "lowerLimit": 0,
+                            "lowerVerticalReference": "AGL",
+                            "horizontalProjection": {
+                                "type": "Polygon",
+                                "coordinates": [[
+                                    [2.485866, 49.029301],
+                                    [2.604141, 49.034704],
+                                    [2.631263, 48.987301],
+                                    [2.510414, 48.983358],
+                                    [2.485866, 49.029301]
+                                ]]
                             },
-                            {
-                                "LAT": "50.865502",
-                                "LON": "4.329257"
+                            "uomDimensions": "M",
+                            "upperLimit": 0,
+                            "upperVerticalReference": "AGL"
+                        },
+                        {
+                            "lowerLimit": 0,
+                            "lowerVerticalReference": "AGL",
+                            "horizontalProjection": {
+                                "type": "Circle",
+                                "center": [2.485866, 49.029301],
+                                "radius": 7000
                             },
-                            {
-                                "LAT": "50.865468",
-                                "LON": "4.323686"
-                            },
-                            {
-                                "LAT": "50.862525",
-                                "LON": "4.32812"
-                            }
-                        ],
-                        "upperLimit": 0,
-                        "upperVerticalReference": "AGL"
-                    },
-                    'applicableTimePeriod': {
-                        'dailySchedule': [{
+                            "uomDimensions": "M",
+                            "upperLimit": 0,
+                            "upperVerticalReference": "AGL"
+                        }
+                    ],
+                    'applicability': {
+                        'schedule': [{
                             'day': 'MON',
                             'endTime': '18:00:00+00:00',
                             'startTime': '12:00:00+00:00'
@@ -230,41 +218,24 @@ def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
                         'permanent': 'YES',
                         'startDateTime': '2020-01-01T00:00:00+00:00',
                     },
-                    'authority': {
-                        'requiresAuthorizationFrom': {
-                            'authority': {
-                                'contactName': 'AuthorityEntity manager',
-                                'email': 'auth@autority.be',
-                                'name': '175d280099fb48eea5da490ac12f816a',
-                                'phone': '234234234',
-                                'service': 'AuthorityEntity service',
-                                'siteURL': 'http://www.autority.be'
-                            }
-                        },
-                        'requiresNotificationTo': {
-                            'authority': {
-                                'contactName': 'AuthorityEntity manager',
-                                'email': 'auth@autority.be',
-                                'name': '175d280099fb48eea5da490ac12f816a',
-                                'phone': '234234234',
-                                'service': 'AuthorityEntity service',
-                                'siteURL': 'http://www.autority.be'
-                            },
-                            'intervalBefore': 'P1D'
-                        }
+                    'zoneAuthority': {
+                        'name': '175d280099fb48eea5da490ac12f816a',
+                        'service': 'AuthorityEntity service',
+                        'purpose': 'AUTHORIZATION',
+                        'email': 'auth@autority.be',
+                        'contactName': 'AuthorityEntity manager',
+                        'siteURL': 'http://www.autority.be',
+                        'phone': '234234234',
+                        'intervalBefore': 'PD30'
                     },
                     'country': 'BEL',
-                    'dataCaptureProhibition': 'YES',
-                    'dataSource': {
-                        'author': 'Author',
-                        'creationDateTime': '2019-01-01T00:00:00+00:00',
-                        'updateDateTime': '2019-01-02T00:00:00+00:00'
-                    },
+                    'regulationExemption': 'YES',
                     'extendedProperties': {},
                     'identifier': "zsdffgs",
                     'message': 'message',
                     'name': "",
                     'reason': [],
+                    'otherReasonInfo': "",
                     'region': 1,
                     'restriction': 'NO_RESTRICTION',
                     'restrictionConditions': [],
@@ -287,32 +258,39 @@ def make_uas_zones_filter_reply() -> Tuple[Dict[str, Any], UASZoneFilterReply]:
 def make_uas_zone_create_reply():
     uas_zone_create_reply_dict = {
         'UASZone': {
-            'airspaceVolume': {
-                "lowerLimit": 0,
-                "lowerVerticalReference": "AGL",
-                "polygon": [
-                    {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
+            'geometry': [
+                {
+                    "lowerLimit": 0,
+                    "lowerVerticalReference": "AGL",
+                    "horizontalProjection": {
+                        "type": "Polygon",
+                        "coordinates": [[
+                            [2.485866, 49.029301],
+                            [2.604141, 49.034704],
+                            [2.631263, 48.987301],
+                            [2.510414, 48.983358],
+                            [2.485866, 49.029301]
+                        ]]
                     },
-                    {
-                        "LAT": "50.865502",
-                        "LON": "4.329257"
+                    "uomDimensions": "M",
+                    "upperLimit": 0,
+                    "upperVerticalReference": "AGL"
+                },
+                {
+                    "lowerLimit": 0,
+                    "lowerVerticalReference": "AGL",
+                    "horizontalProjection": {
+                        "type": "Circle",
+                        "center": [2.485866, 49.029301],
+                        "radius": 7000
                     },
-                    {
-                        "LAT": "50.865468",
-                        "LON": "4.323686"
-                    },
-                    {
-                        "LAT": "50.862525",
-                        "LON": "4.32812"
-                    }
-                ],
-                "upperLimit": 0,
-                "upperVerticalReference": "AGL"
-            },
-            'applicableTimePeriod': {
-                'dailySchedule': [{
+                    "uomDimensions": "M",
+                    "upperLimit": 0,
+                    "upperVerticalReference": "AGL"
+                }
+            ],
+            'applicability': {
+                'schedule': [{
                     'day': 'MON',
                     'endTime': '18:00:00+00:00',
                     'startTime': '12:00:00+00:00'
@@ -325,41 +303,24 @@ def make_uas_zone_create_reply():
                 'permanent': 'YES',
                 'startDateTime': '2020-01-01T00:00:00+00:00',
             },
-            'authority': {
-                'requiresAuthorizationFrom': {
-                    'authority': {
-                        'contactName': 'AuthorityEntity manager',
-                        'email': 'auth@autority.be',
-                        'name': '175d280099fb48eea5da490ac12f816a',
-                        'phone': '234234234',
-                        'service': 'AuthorityEntity service',
-                        'siteURL': 'http://www.autority.be'
-                    }
-                },
-                'requiresNotificationTo': {
-                    'authority': {
-                        'contactName': 'AuthorityEntity manager',
-                        'email': 'auth@autority.be',
-                        'name': '175d280099fb48eea5da490ac12f816a',
-                        'phone': '234234234',
-                        'service': 'AuthorityEntity service',
-                        'siteURL': 'http://www.autority.be'
-                    },
-                    'intervalBefore': 'P1D'
-                }
+            'zoneAuthority': {
+                'name': '175d280099fb48eea5da490ac12f816a',
+                'service': 'AuthorityEntity service',
+                'purpose': 'AUTHORIZATION',
+                'email': 'auth@autority.be',
+                'contactName': 'AuthorityEntity manager',
+                'siteURL': 'http://www.autority.be',
+                'phone': '234234234',
+                'intervalBefore': 'PD30'
             },
             'country': 'BEL',
-            'dataCaptureProhibition': 'YES',
-            'dataSource': {
-                'author': 'Author',
-                'creationDateTime': '2019-01-01T00:00:00+00:00',
-                'updateDateTime': '2019-01-02T00:00:00+00:00'
-            },
+            'regulationExemption': 'YES',
             'extendedProperties': {},
             'identifier': "zsdffgs",
             'message': 'message',
             'name': "",
             'reason': [],
+            'otherReasonInfo': "",
             'region': 1,
             'restriction': 'NO_RESTRICTION',
             'restrictionConditions': [],
@@ -413,7 +374,7 @@ def make_uas_zone_subscription_reply():
     uas_zone_subscription_reply_object_dict, _ = make_uas_zone_subscription_reply_object()
 
     uas_zone_subscription_reply_dict = {
-        'UASZoneSubscription': uas_zone_subscription_reply_object_dict,
+        'subscription': uas_zone_subscription_reply_object_dict,
         'genericReply': {
             'RequestStatus': 'OK',
             'RequestExceptionDescription': 'everything ok',
@@ -430,7 +391,7 @@ def make_uas_zone_subscriptions_reply():
     uas_zone_subscription_reply_object_dict, _ = make_uas_zone_subscription_reply_object()
 
     uas_zone_subscriptions_reply_dict = {
-        'UASZoneSubscriptions': [uas_zone_subscription_reply_object_dict],
+        'subscriptions': [uas_zone_subscription_reply_object_dict],
         'genericReply': {
             'RequestStatus': 'OK',
             'RequestExceptionDescription': 'everything ok',
